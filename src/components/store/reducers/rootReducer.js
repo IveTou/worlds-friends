@@ -4,5 +4,5 @@ import { combineReducers } from 'redux';
 
 export default combineReducers({
   auth: authReducer,
-  project: projectReducer
+  project: projectReducer,
 })
