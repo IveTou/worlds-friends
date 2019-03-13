@@ -1,13 +1,15 @@
 export const signIn = credentials => {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();
-    firebase.auth().sighInWithEmailAndPassword({
-    })
+    firebase.auth().sighInWithEmailAndPassword(
+      credentials.email,
+      credentials.password
+    )
     .then(() => {
-      dispatch({ type: 'CREATE_PROJECT', project })
+      dispatch({ type: 'LOGIN_SUCCESS' })
     })
     .catch((err) => {
-      dispatch({ type: 'CREATE_PROJECT_ERROR', err })
+      dispatch({ type: 'LOGIN_ERROR', err })
     });
   }
 }
