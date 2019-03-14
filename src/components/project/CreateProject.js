@@ -5,7 +5,7 @@ import { createProject } from '../../store/actions/projectActions';
 class CreateProject extends Component {
   state = {
     title: '',
-    content: ''
+    content: '',
   }
 
   handleChange = e => {
