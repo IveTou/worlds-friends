@@ -9,10 +9,14 @@ export const signIn = credentials => {
         credentials.password
       )
       .then(res => {
-        firebase.database().ref().child(res.user.uid).set({ 
-          time: new Date().getTime(), 
-          coordinates: { lng: null, lat: null }
-        });
+        firebase.database().ref().child(res.user.uid).set(
+          { 
+            time: new Date().getTime(), 
+            coordinates: { lng: null, lat: null }
+          },
+          //CONCERN_ISSUE
+          () => dispatch({ type: 'CREATE_USER_SUCCESS' })
+        );
       })
       .then(() => {
         dispatch({ type: 'LOGIN_SUCCESS' });
@@ -31,7 +35,10 @@ export const signOut = () => {
 
     firebase.auth().signOut()
     .then(() => {
-      firebase.database().ref().child(authorId).remove()
+      //CONCERN_ISSUE
+      firebase.database().ref().child(authorId).remove(
+        () => dispatch({ type: 'DELETE_USER_SUCCESS' })
+      )
     })
     .then(() => {
       dispatch({ type: 'SIGNOUT_SUCCESS'});

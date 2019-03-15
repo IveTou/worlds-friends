@@ -5,7 +5,7 @@ const initState = {
 const activityReducer = (state = initState, action) => {
   switch(action.type) {
     case 'STATUS_UPDATE_SUCCESS':
-      console.log('Status update succeeded');
+      console.log('Status update sucess');
       return {
         ...state,
         updateError: null,
@@ -16,6 +16,18 @@ const activityReducer = (state = initState, action) => {
         ...state,
         authError: 'Status update failed'
       }
+      case 'CREATE_USER_SUCCESS':
+        console.log('Create user sucess');
+        return {
+          ...state,
+          updateError: null,
+        }
+      case 'DELETE_USER_SUCCESS':
+        console.log('Delete user sucess');
+        return {
+          ...state,
+          authError: null
+        }
     default:
       return state;
   }
