@@ -25,9 +25,14 @@ export const signIn = credentials => {
 }
 
 export const signOut = () => {
-  return (dispatch, _, { getFirebase }) => {
+  return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();
+    const authorId = getState().firebase.auth.uid;
+
     firebase.auth().signOut()
+    .then(() => {
+      firebase.database().ref().child(authorId).remove()
+    })
     .then(() => {
       dispatch({ type: 'SIGNOUT_SUCCESS'});
     })
