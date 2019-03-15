@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import NavBar from './components/layout/NavBar';
+import LiveMap from './components/live/LiveMap';
 import DashBoard from './components/dashboard/Dashboard';
 import ProjectDetails from './components/project/ProjectDetails';
 import SignIn from './components/auth/SignIn';
@@ -22,7 +23,7 @@ class App extends Component {
         <div className="App">
           <NavBar />
           <Switch>
-            <Route exact path='/' component={auth.uid ? DashBoard : SignIn}/>
+            <Route exact path='/' component={auth.uid ? LiveMap : SignIn}/>
             <ProtectedRoute 
               isAllowed={!auth.uid}
               redirect='/'  

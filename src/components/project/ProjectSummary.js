@@ -3,7 +3,6 @@ import moment from 'moment';
 import { Link } from 'react-router-dom';
 
 const ProjectSummary = ({project, id}) => {
-  console.log(project)
   return (
     <Link to={'/project/'+id }>
       <div className="card z-depth-0 project-summary">
