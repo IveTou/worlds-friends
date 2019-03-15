@@ -22,7 +22,7 @@ class App extends Component {
         <div className="App">
           <NavBar />
           <Switch>
-            <Route exact path='/' component={DashBoard}/>
+            <Route exact path='/' component={auth.uid ? DashBoard : SignIn}/>
             <ProtectedRoute 
               isAllowed={!auth.uid}
               redirect='/'  
