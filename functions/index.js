@@ -59,16 +59,16 @@ exports.projectCreated = functions.firestore
       })
 
       exports.userSignOut = functions.auth.user()
-      .onCreate(user => {
-        return admin.firebase.collection
-          .doc(user.uid).get().then(doc => {
-            const newUser = doc.data();
-            const notification = {
-              content: 'Joined to the party',
-              user: `${newUser.firstName} ${newUser.lastName}`,
-              time: admin.firestore.FieldValue.serverTimestamp(),
-            }
+        .onCreate(user => {
+          return admin.firebase.collection
+            .doc(user.uid).get().then(doc => {
+              const newUser = doc.data();
+              const notification = {
+                content: 'Joined to the party',
+                user: `${newUser.firstName} ${newUser.lastName}`,
+                time: admin.firestore.FieldValue.serverTimestamp(),
+              }
 
-            return createNotification(notification);
-          })
+              return createNotification(notification);
+            })
       })
