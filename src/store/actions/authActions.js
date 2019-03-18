@@ -9,9 +9,9 @@ export const signIn = credentials => {
         credentials.password
       )
       .then(res => {
-        firebase.database().ref().child(res.user.uid).set(
+        firebase.database().ref().child('users').child(res.user.uid).set(
           { 
-            time: new Date().getTime(), 
+            timestamp: new Date().getTime(), 
             coordinates: { longitude: null, latitude: null }
           },
           //CONCERN_ISSUE
@@ -36,7 +36,7 @@ export const signOut = () => {
     firebase.auth().signOut()
     .then(() => {
       //CONCERN_ISSUE
-      firebase.database().ref().child(authorId).remove(
+      firebase.database().ref().child('users').child(authorId).remove(
         () => dispatch({ type: 'DELETE_USER_SUCCESS' })
       )
     })

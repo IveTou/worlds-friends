@@ -6,30 +6,30 @@ import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
 import CreateProject from './components/project/CreateProject';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import DefaultLayout from './components/layout/DefaultLayout';
 import ProtectedLayout from './components/layout/ProtectedLayout';
+import NavBar from './components/layout/NavBar';
 
 class App extends Component {
   render() {
     const { auth } = this.props;
     return (
       <BrowserRouter>
-        {auth.uid ? 
-          <ProtectedLayout>
-            <Route exact path='/' component={LiveMap}/>
-            <Route exact path='/project/:id' component={ProjectDetails}/>
-            <Route exact path='/create' component={CreateProject}/>
-          </ProtectedLayout>
-          :
-          <DefaultLayout className="App">
-            <Switch>
+        <Switch>
+          {auth.uid ?           
+            <ProtectedLayout className="App">
+              <Route exact path='/' component={LiveMap}/>
+              <Route path='/project/:id' component={ProjectDetails}/>
+              <Route path='/create' component={CreateProject}/>
+            </ProtectedLayout>
+            :
+            <DefaultLayout className="App">
               <Route exact path='/' component={SignIn}/>
-              <Route exact path='/signin' component={SignIn}/>
-              <Route exact path='/signup' component={SignUp}/>
-            </Switch>
-          </DefaultLayout>
-        }
+              <Route path='/signin' component={SignIn}/>
+              <Route path='/signup' component={SignUp}/>
+            </DefaultLayout>
+          }
+        </Switch>
       </BrowserRouter>
     );
   }

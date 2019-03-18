@@ -17,7 +17,7 @@ const activityReducer = (state = initState, action) => {
         authError: 'Status update failed'
       }
     case 'GET_GEOLOCATION_ERROR':
-      console.warn(`ERROR(${action.code}): ${action.message}`);
+      console.log('Get location error');
       return {
         ...state,
         authError: 'Get location failed'

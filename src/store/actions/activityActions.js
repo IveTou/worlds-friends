@@ -12,8 +12,8 @@ export const sendCurrentStatus = status => {
     //SYNC_ISSUE
     authorId && navigator.geolocation.getCurrentPosition(
       pos => {
-        firebase.database().ref().child(authorId).set({ 
-          time: new Date().getTime(), 
+        firebase.database().ref().child('users').child(authorId).set({ 
+          timestamp: new Date().getTime(), 
           coordinates: { 
             longitude: pos.coords.longitude, 
             latitude: pos.coords.latitude, 
