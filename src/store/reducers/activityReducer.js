@@ -16,18 +16,24 @@ const activityReducer = (state = initState, action) => {
         ...state,
         authError: 'Status update failed'
       }
-      case 'CREATE_USER_SUCCESS':
-        console.log('Create user sucess');
-        return {
-          ...state,
-          updateError: null,
-        }
-      case 'DELETE_USER_SUCCESS':
-        console.log('Delete user sucess');
-        return {
-          ...state,
-          authError: null
-        }
+    case 'GET_GEOLOCATION_ERROR':
+      console.warn(`ERROR(${action.code}): ${action.message}`);
+      return {
+        ...state,
+        authError: 'Get location failed'
+      }
+    case 'CREATE_USER_SUCCESS':
+      console.log('Create user sucess');
+      return {
+        ...state,
+        updateError: null,
+      }
+    case 'DELETE_USER_SUCCESS':
+      console.log('Delete user sucess');
+      return {
+        ...state,
+        authError: null
+      }
     default:
       return state;
   }

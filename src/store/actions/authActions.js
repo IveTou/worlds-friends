@@ -12,7 +12,7 @@ export const signIn = credentials => {
         firebase.database().ref().child(res.user.uid).set(
           { 
             time: new Date().getTime(), 
-            coordinates: { lng: null, lat: null }
+            coordinates: { longitude: null, latitude: null }
           },
           //CONCERN_ISSUE
           () => dispatch({ type: 'CREATE_USER_SUCCESS' })
