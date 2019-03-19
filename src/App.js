@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import LiveMap from './components/live/LiveMap';
 import ProjectDetails from './components/project/ProjectDetails';
 import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
@@ -8,6 +7,7 @@ import CreateProject from './components/project/CreateProject';
 import { connect } from 'react-redux';
 import DefaultLayout from './components/layout/DefaultLayout';
 import ProtectedLayout from './components/layout/ProtectedLayout';
+import MapCanvas from './components/live/MapCanvas';
 
 class App extends Component {
   render() {
@@ -17,7 +17,7 @@ class App extends Component {
         <Switch>
           {auth.uid ?           
             <ProtectedLayout className="App">
-              <Route exact path='/' component={LiveMap}/>
+              <Route exact path='/' component={MapCanvas}/>
               <Route path='/project/:id' component={ProjectDetails}/>
               <Route path='/create' component={CreateProject}/>
             </ProtectedLayout>
