@@ -3,7 +3,7 @@ import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/database';
 
-var config = {
+const config = {
   apiKey: "AIzaSyBWVHBd8PAc2lDxwKynruK2f4Umv-QF8LQ",
   authDomain: "react-redux-firebase-2f3ee.firebaseapp.com",
   databaseURL: "https://react-redux-firebase-2f3ee.firebaseio.com",

@@ -8,7 +8,6 @@ import CreateProject from './components/project/CreateProject';
 import { connect } from 'react-redux';
 import DefaultLayout from './components/layout/DefaultLayout';
 import ProtectedLayout from './components/layout/ProtectedLayout';
-import NavBar from './components/layout/NavBar';
 
 class App extends Component {
   render() {

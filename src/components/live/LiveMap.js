@@ -6,7 +6,6 @@ import { compose } from 'redux';
 class LiveMap extends Component {
   render() {
     const { users } = this.props;
-    console.log(users);
     return (
       <div className="dashboard container">
         <div className="row">
@@ -22,7 +21,6 @@ class LiveMap extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
     users: state.firebase.ordered.users,
   }

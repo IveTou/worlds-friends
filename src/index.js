@@ -10,7 +10,17 @@ import thunk from 'redux-thunk';
 import { reduxFirestore, getFirestore } from 'redux-firestore';
 import { reactReduxFirebase, getFirebase } from 'react-redux-firebase'; 
 import fbConfig from './config/fbConfig';
+import googleMapsClient from './config/gmConfig'
 
+googleMapsClient.geocode({
+  address: '529 14th St NW, Washington, DC 20045'
+}, function(err, response) {
+  if (!err) {
+    console.log(response.json.results);
+  } else {
+    console.log(err);
+  }
+});
 
 const store = createStore(rootReducer, 
   compose(

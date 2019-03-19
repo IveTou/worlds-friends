@@ -26,7 +26,8 @@ exports.projectCreated = functions.firestore
     }
 
     return createNotification(notification);
-  });
+  }
+);
 
 exports.userJoined = functions.auth.user()
   .onCreate(user => {
@@ -41,4 +42,5 @@ exports.userJoined = functions.auth.user()
 
         return createNotification(notification);
       })
-  })
+  }
+)
