@@ -4,7 +4,7 @@ import 'firebase/auth';
 import 'firebase/database';
 
 const config = {
-  apiKey: "AIzaSyBWVHBd8PAc2lDxwKynruK2f4Umv-QF8LQ",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: "react-redux-firebase-2f3ee.firebaseapp.com",
   databaseURL: "https://react-redux-firebase-2f3ee.firebaseio.com",
   projectId: "react-redux-firebase-2f3ee",
