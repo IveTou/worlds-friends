@@ -10,7 +10,7 @@ const Notifications = ({ notifications }) => {
           <ul className="notifications">
             { notifications && notifications.map(item => 
               <li key={item.id}>
-                <span className="pink-text">{item.user}</span>
+                <span className="green-text">{item.user} </span>
                 <span>{item.content}</span>
                 <div className="grey-text note-date">
                   {moment(item.time.toDate()).fromNow()}

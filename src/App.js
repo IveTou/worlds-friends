@@ -24,6 +24,7 @@ class App extends Component {
             </ProtectedLayout>
             :
             <DefaultLayout className="App">
+              <Route exact path="/" render={() => <Redirect to="/signin" />} />
               <Route path='/signin' component={SignIn}/>
               <Route path='/signup' component={SignUp}/>
               <Route render={() => <Redirect to="/signin" />} />
