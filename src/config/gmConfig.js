@@ -2,7 +2,7 @@ import googleMaps from '@google/maps';
 
 export const config = {
   url: 'https://maps.googleapis.com/maps/api/js?',
-  key: 'AIzaSyBb7bGZ2aw7QRoBgFfl25kxHDwABpjgqDI',
+  key: process.env.REACT_APP_GOOGLEMAPS_API_KEY,
   v: '3.exp',
   center: {
     lat: -12.98,
