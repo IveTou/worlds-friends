@@ -13,10 +13,17 @@ class MapCanvas extends Component {
     return (
       <div className="dashboard container">
         <div className="row">
-          <div className="col s12 m8" style={{height: '400px'}}>
+          <div 
+            className="col s12 m8" 
+            style={{
+              height: '400px',
+              paddingTop: '1rem',
+              paddingBottom: '1rem',
+            }}
+          >
             <MapLive users={users} />
           </div>
-          <div className="col s12 m3 offset-m1">
+          <div className="col s12 m3">
             <Notifications notifications={notifications} />
           </div>
         </div>
