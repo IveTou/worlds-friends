@@ -5,11 +5,13 @@
   "dependencies": {
     "@google/maps": "^0.5.5",
     "@material-ui/core": "^3.9.2",
+    "classnames": "^2.2.6",
     "firebase": "^5.8.6",
     "google-map-react": "^1.1.2",
     "moment": "^2.24.0",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
+    "react-gmaps": "^1.9.0",
     "react-redux": "^5.1.1",
     "react-redux-firebase": "^2.2.6",
     "react-router-dom": "^4.3.1",
