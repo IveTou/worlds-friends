@@ -1,7 +1,8 @@
 export const sendCurrentStatus = status => {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();
-    const authorId = getState().firebase.auth.uid;
+    const { uid, email } = getState().firebase.auth;
+    const { initials } = getState().firebase.profile;
 
     const options = {
       enableHighAccuracy: true,
@@ -10,9 +11,11 @@ export const sendCurrentStatus = status => {
     };
 
     //SYNC_ISSUE
-    authorId && navigator.geolocation.getCurrentPosition(
+    uid && navigator.geolocation.getCurrentPosition(
       pos => {
-        firebase.database().ref().child('users').child(authorId).set({ 
+        firebase.database().ref().child('users').child(uid).set({
+          email,
+          initials,
           timestamp: new Date().getTime(), 
           coordinates: { 
             longitude: pos.coords.longitude, 

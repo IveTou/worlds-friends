@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Redirect, Route } from 'react-router-dom';
 import ProjectDetails from './components/project/ProjectDetails';
 import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
@@ -20,12 +20,13 @@ class App extends Component {
               <Route exact path='/' component={MapCanvas}/>
               <Route path='/project/:id' component={ProjectDetails}/>
               <Route path='/create' component={CreateProject}/>
+              <Route render={() => <Redirect to="/" />} />
             </ProtectedLayout>
             :
             <DefaultLayout className="App">
-              <Route exact path='/' component={SignIn}/>
               <Route path='/signin' component={SignIn}/>
               <Route path='/signup' component={SignUp}/>
+              <Route render={() => <Redirect to="/signin" />} />
             </DefaultLayout>
           }
         </Switch>
