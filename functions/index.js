@@ -44,3 +44,9 @@ exports.userJoined = functions.auth.user()
       })
   }
 )
+
+exports.removeInactive = functions.https.onRequest((request, response) => {
+  admin.database().ref('users/{userId}/timestamp').map(time => {
+    return time;
+  });
+ });

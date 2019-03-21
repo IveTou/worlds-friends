@@ -9,11 +9,9 @@ export const signIn = credentials => {
         credentials.password
       )
       .then(res => {
-        firebase.database().ref().child('users').child(res.user.uid).set(
-          { 
-            timestamp: new Date().getTime(), 
-            coordinates: { longitude: null, latitude: null }
-          },
+        firebase.database().ref()
+        .child('users').child(res.user.uid).set(
+          { timestamp: firebase.database.ServerValue.TIMESTAMP },
           //CONCERN_ISSUE
           () => dispatch({ type: 'CREATE_USER_SUCCESS' })
         );
@@ -31,12 +29,12 @@ export const signIn = credentials => {
 export const signOut = () => {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();
-    const authorId = getState().firebase.auth.uid;
+    const { uid } = getState().firebase.auth;
 
     firebase.auth().signOut()
     .then(() => {
       //CONCERN_ISSUE
-      firebase.database().ref().child('users').child(authorId).remove(
+      firebase.database().ref().child('users').child(uid).remove(
         () => dispatch({ type: 'DELETE_USER_SUCCESS' })
       )
     })
