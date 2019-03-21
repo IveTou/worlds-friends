@@ -5,14 +5,20 @@ admin.initializeApp(functions.config().firebase);
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
-exports.helloWorld = functions.https.onRequest((request, response) => {
- response.send("Hello bitcheees!");
-});
+//exports.helloWorld = functions.https.onRequest((request, response) => {
+// response.send("Hello bitcheees!");
+//});
 
 const createNotification = notification => {
   return admin.firestore().collection('notifications')
     .add(notification)
     .then(doc => console.log('notification added', doc))
+}
+
+minusOneHourTimestamp = () => {
+  const currentTime = new Date();
+  const passTime = currentTime.setMinutes(currentTime.getMinutes() - 30);
+  return passTime;
 }
 
 exports.projectCreated = functions.firestore
@@ -45,8 +51,15 @@ exports.userJoined = functions.auth.user()
   }
 )
 
-exports.removeInactive = functions.https.onRequest((request, response) => {
-  admin.database().ref('users/{userId}/timestamp').map(time => {
-    return time;
+exports.removeInactive = functions.https.onRequest((req, res) => {
+  admin.database().ref('users').orderByChild('timestamp')
+  .endAt(minusOneHourTimestamp())
+  .on('value', snapshot => {
+    snapshot.forEach(snapshotChild => {
+      snapshotChild.ref.remove()
+      .then(() => console.log('The object', snapshotChild.child("email").val(),'was removed'))
+      .catch(err => console.error('Remove failed: ', err.message))
+    })
   });
- });
+  res.end();
+});

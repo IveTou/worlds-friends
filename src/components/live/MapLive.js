@@ -6,6 +6,7 @@ import {
   GoogleMap,
   Marker
 } from "react-google-maps";
+
 import { config } from '../../config/gmConfig';
 
 const MapLive = ({ users }) => (
@@ -17,15 +18,17 @@ const MapLive = ({ users }) => (
         lng: config.center.lng,
       }
     }>
-    {users && users.map(user =>
-      <Marker 
+    {users && users.map(user => {
+      const { value: { coordinates }} = user;
+      return coordinates && <Marker 
         position={{ 
-          lat: user.value.coordinates && user.value.coordinates.latitude, 
-          lng: user.value.coordinates && user.value.coordinates.longitude
+          lat: coordinates.latitude, 
+          lng: coordinates.longitude,
         }} 
         key={user.key}
-        icon='https://firebasestorage.googleapis.com/v0/b/react-redux-firebase-2f3ee.appspot.com/o/img%2Fpin-green.png?alt=media&token=1b61cb01-48f2-4123-a33b-3b0e0b9b5043'
+        icon={config.assetsUrl+config.onlineMarker}
         />
+      }
     )}
   </GoogleMap>
 );
