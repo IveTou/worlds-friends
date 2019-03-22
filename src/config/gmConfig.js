@@ -11,7 +11,8 @@ export const config = {
   },
   zoom: 13,
   assetsUrl:'https://firebasestorage.googleapis.com/v0/b/react-redux-firebase-2f3ee.appspot.com/o/img%2F',
-  onlineMarker:'pin-green.png?alt=media&token=1b61cb01-48f2-4123-a33b-3b0e0b9b5043'
+  onlineMarker:'pin-green.png?alt=media&token=1b61cb01-48f2-4123-a33b-3b0e0b9b5043',
+  ownMarker:'pin-blue.png?alt=media&token=a60cecd9-7738-48af-89cc-94c1e566089a',
 }
 
 export default googleMaps.createClient(omit(config, ['v','assetsUrl', 'onlineMarker']));

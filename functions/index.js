@@ -21,6 +21,7 @@ minusOneHourTimestamp = () => {
   return passTime;
 }
 
+/*
 exports.projectCreated = functions.firestore
   .document('projects/{projectId}')
   .onCreate(doc => {
@@ -34,6 +35,7 @@ exports.projectCreated = functions.firestore
     return createNotification(notification);
   }
 );
+*/
 
 exports.userJoined = functions.auth.user()
   .onCreate(user => {
@@ -41,7 +43,7 @@ exports.userJoined = functions.auth.user()
       .doc(user.uid).get().then(doc => {
         const newUser = doc.data();
         const notification = {
-          content: 'Joined to the party',
+          content: 'Joined to the world',
           user: `${newUser.firstName} ${newUser.lastName}`,
           time: admin.firestore.FieldValue.serverTimestamp(),
         }
