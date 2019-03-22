@@ -55,7 +55,7 @@ exports.userJoined = functions.auth.user()
 exports.removeInactive = functions.https.onRequest((req, res) => {
   admin.database().ref('users').orderByChild('timestamp')
   .endAt(minusOneHourTimestamp())
-  .on('value', snapshot => {
+  .once('value', snapshot => {
     snapshot.forEach(snapshotChild => {
       snapshotChild.ref.remove()
       .then(() => console.log('The object', snapshotChild.child("email").val(),'was removed'))
