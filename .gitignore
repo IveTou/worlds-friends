@@ -24,4 +24,5 @@ yarn-error.log*
 
 .firebase/hosting.*
 package-lock.json
+firebase-debug.log
 .env
