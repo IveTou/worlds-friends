@@ -12,14 +12,14 @@ export const sendCurrentStatus = status => {
       maximumAge: 0
     };
 
-    //SYNC_ISSUE
+    //SYNC_ISSUE 
     uid && navigator.geolocation.getCurrentPosition(
       pos => {
         const coordinates = { 
           longitude: pos.coords.longitude, 
           latitude: pos.coords.latitude, 
         };
-        
+
         firebase.database().ref().child('users').child(uid).update({
           email,
           initials,
