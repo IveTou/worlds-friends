@@ -28,7 +28,6 @@ const MapLive = ({ users, uid }) =>
     }>
     {users && users.map(user => {
       const { value: { coordinates }} = user;
-      console.log(user);
       return coordinates && <MarkerWithLabel
         clickable={uid !== user.key} 
         position={{ 

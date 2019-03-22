@@ -1,5 +1,6 @@
 const initState = {
   updateError: null,
+  coordinates: {},
 };
 
 const activityReducer = (state = initState, action) => {
@@ -20,8 +21,21 @@ const activityReducer = (state = initState, action) => {
       console.log('Get location error');
       return {
         ...state,
-        authError: 'Get location failed'
+        authError: 'Get location failed',
       }
+    case 'REVERSE_GEOCODE_SUCCESS':
+      console.log('Reverse geocode sucess');
+      return {
+        ...state,
+        address: action.address,
+        updateError: null,
+      }
+      case 'REVERSE_GEOCODE_ERROR':
+        console.log('Reverse geocode failed');
+        return {
+          ...state,
+        authError: 'Reverse geocode failed',
+        }
     case 'CREATE_USER_SUCCESS':
       console.log('Create user sucess');
       return {

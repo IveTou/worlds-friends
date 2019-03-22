@@ -5,7 +5,7 @@ const Notifications = ({ notifications }) => {
   return (
     <div className="section">
       <div className="card z-depth-0">
-        <div className="card-content">
+        <div className="card-content" style={{fontSize: '12px'}}>
           <span className="card-title">Notifications</span>
           <ul className="notifications">
             { notifications && notifications.map(item => 

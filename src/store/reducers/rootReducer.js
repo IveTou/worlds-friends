@@ -8,5 +8,5 @@ export default combineReducers({
   auth: authReducer,
   activity: activityReducer,
   firestore: firestoreReducer,
-  firebase: firebaseReducer
+  firebase: firebaseReducer,
 })
