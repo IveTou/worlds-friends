@@ -6,7 +6,7 @@ import { compose } from 'redux';
 
 import Notifications from '../dashboard/Notifications';
 import MapLive from './MapLive';
-import Menu from '../dashboard/Menu';
+import SideBar from '../dashboard/SideBar';
 
 class MapCanvas extends Component {
   render() {
@@ -15,7 +15,7 @@ class MapCanvas extends Component {
       <div className="dashboard container">
         <div className="row">
           <div className="col s12 m3">
-            <Menu />
+            <SideBar />
           </div>
           <div 
             className="col s12 m6" 

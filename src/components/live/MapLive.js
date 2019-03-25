@@ -35,7 +35,7 @@ const MapLive = ({ users, uid }) =>
           lng: coordinates.longitude,
         }} 
         key={user.key}
-        labelAnchor={{x: 10, y: 44}}
+        labelAnchor={{x: 8, y: 44}}
         icon={uid === user.key
           ? config.assetsUrl+config.ownMarker
           : config.assetsUrl+config.onlineMarker
