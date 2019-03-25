@@ -1,6 +1,6 @@
 const initState = {
   updateError: null,
-  coordinates: {},
+  address: '',
 };
 
 const activityReducer = (state = initState, action) => {

@@ -2,8 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
+import { reject } from 'lodash';
 
-const Menu = ({ address, auth, profile, users }) => {
+const Menu = ({ address, uid, profile, users }) => {
+  const others = reject(users, ['key', uid]) || [];
+  
   return (
     <div className="section">
       <div className="card z-depth-0">
@@ -17,10 +20,19 @@ const Menu = ({ address, auth, profile, users }) => {
             </li>
           </ul>
           <hr/>
-          <span className="card-title green-text text-darken-4">About the world</span>
+          <span className="card-title green-text text-darken-4">World's friends</span>
           <ul className="summary">
-            <li>Who am I?</li>
-            <li>Where am I?</li>
+            {others && others.map(other => {
+              let { key, value: { email, initials }} = other;
+              return(
+                <li key={key}>
+                  <button style={{background: 'none', border: 'none', cursor: 'pointer'}}>
+                    <span className="green-text">{initials} </span>
+                  </button>
+                  <span>{email}</span>
+                </li>
+              )
+            })}
           </ul>
         </div>
       </div>
