@@ -53,7 +53,8 @@ class SideBar extends Component {
                       onClick={this.handleClick}
                       style={{cursor: 'pointer'}}
                     >
-                    <span className="green-text">{initials}</span><span> {email}</span>
+                    <span className="green-text">{initials}</span>
+                    <span> {email}</span>
                     </div>
                     <Menu
                       anchorEl={anchorEl}
