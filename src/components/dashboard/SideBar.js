@@ -4,23 +4,38 @@ import { Menu, MenuItem, Zoom } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
-import { reject } from 'lodash';
+import { filter, reject } from 'lodash';
+
+import { getRoute } from '../../store/actions/activityActions';
 
 class SideBar extends Component {
-   constructor(props) {
-     super(props)
+  constructor(props) {
+    super(props)
    
-     this.state = {
+    this.state = {
       anchorEl: null,
-     }
-   }
+    }
+  }
 
-   handleClick = event => {
-    this.setState({ anchorEl: event.currentTarget });
+  handleClick = event => {
+    this.setState({ anchorEl: event.currentTarget, selectedId: null });
   }
 
   handleClose = () => {
-    this.setState({ anchorEl: null });
+    this.setState({ anchorEl: null, selectedId: null  });
+  };
+
+  handleClickDetails = e => {
+    this.setState({ anchorEl: null, selectedId: e.target.id });
+  }
+
+  handleClickFind = e => {
+    const { users, address: { coordinates: origin } } = this.props;
+    const { id: targetId } = e.target;
+    const { value: { coordinates: target } } = filter(users, ['key', targetId])[0] || {};
+
+    this.setState({ anchorEl: null, targetId });
+    this.props.getRoute(origin, target)
   }
   
   render () {
@@ -37,7 +52,7 @@ class SideBar extends Component {
               <li><span className="blue-text">Hello, I'm </span><span>{profile.firstName} {profile.lastName}</span></li>
               <li>
                 <span className="blue-text">and I'm at </span>
-                <span>{address ? address : 'Wait a second...'}</span>
+                <span>{address ? address.formatted : 'Wait a second...'}</span>
               </li>
             </ul>
             <hr/>
@@ -54,8 +69,8 @@ class SideBar extends Component {
                         onClick={this.handleClick}
                         style={{cursor: 'pointer'}}
                       >
-                      <span className="green-text">{initials}</span>
-                      <span> {email}</span>
+                        <span className="green-text">{initials} </span>
+                        <span>{email}</span>
                       </div>
                       <Menu
                         anchorEl={anchorEl}
@@ -63,8 +78,21 @@ class SideBar extends Component {
                         onClose={this.handleClose}
                         TransitionComponent={Zoom}
                       >
-                        <MenuItem onClick={this.handleClose}>Details</MenuItem>
-                        <MenuItem onClick={this.handleClose}>Go find!</MenuItem>
+                        <MenuItem 
+                          id={key}
+                          onClick={this.handleClickDetails}
+                          style={{ minWidth: '140px'}}
+                        >
+                          Details
+                        </MenuItem>
+                        <MenuItem 
+                          id={key}
+                          onClick={this.handleClickFind}
+                          style={{ minWidth: '140px'}}
+                          disabled={!address}
+                        >
+                          {address ? 'Go find!' : 'Please wait a little...'}
+                        </MenuItem>
                       </Menu>
                     </li>
                   )}) :
@@ -84,10 +112,17 @@ const mapStateToProps = state => {
     profile: state.firebase.profile,
     uid: state.firebase.auth.uid,
     address: state.activity.address,
+    route: state.activity.route,
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    getRoute: (origin, target) => dispatch(getRoute(origin, target))
   }
 }
 
 export default compose(
-  connect(mapStateToProps),
+  connect(mapStateToProps, mapDispatchToProps),
   firebaseConnect(['users']),
  )(SideBar);

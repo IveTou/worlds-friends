@@ -1,7 +1,7 @@
 const initState = {
   updateError: null,
   address: null,
-  targetUser: null,
+  route: null,
 };
 
 const activityReducer = (state = initState, action) => {
@@ -49,12 +49,19 @@ const activityReducer = (state = initState, action) => {
         ...state,
         updateError: null
       }
-    case 'SELECT_TARGET_USER_SUCCESS':
-      console.log('Select target user sucess');
+    case 'GET_ROUTE_SUCCESS':
+      console.log('Get route sucess', action.route);
       return {
         ...state,
-        targetUser: action.targetUser,
+        route: action.route,
         updateError: null,
+      }
+    case 'GET_ROUTE_ERROR':
+      console.log('Get route error');
+      return {
+        ...state,
+        route: null,
+        updateError: 'Get route failed',
       }
     default:
       return state;

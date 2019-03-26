@@ -10,18 +10,15 @@ const initState = {
 
 const dialogReducer = (state = initState, action) => {
   const { 
-    type, 
-    status: { 
-      title, 
-      message, 
-      hasProgress, 
-      countDown,
-      agree,
-      disagree,
-    },
-  } = action;
+    title, 
+    message, 
+    hasProgress, 
+    countDown,
+    agree,
+    disagree,
+  } = state;
 
-  switch(type) {
+  switch(action.type) {
     case 'OPEN_DIALOG':
       console.log('Open dialog');
       return {

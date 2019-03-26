@@ -37,7 +37,7 @@ export const sendCurrentStatus = () => {
           .asPromise()
           .then(res => dispatch({ 
             type: 'REVERSE_GEOCODE_SUCCESS', 
-            address: res.json.results[0].formatted_address 
+            address: { formatted: res.json.results[0].formatted_address, coordinates } 
           }))
           .catch(err => dispatch({ type: 'REVERSE_GEOCODE_ERROR', err}));
       },
@@ -46,5 +46,12 @@ export const sendCurrentStatus = () => {
       },
       options
     )
+  }
+}
+
+export const getRoute = (origin, target) => {
+  return (dispatch, getState, { getFirebase }) => {
+    const route = { origin, target };
+    dispatch({ type: 'GET_ROUTE_SUCCESS', route });
   }
 }
