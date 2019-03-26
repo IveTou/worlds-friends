@@ -27,7 +27,7 @@ class SideBar extends Component {
     const { anchorEl } = this.state;
     const { address, uid, profile, users } = this.props;
     const others = reject(users, ['key', uid]) || [];
-  
+
     return (
       <div className="section">
         <div className="card z-depth-0">
@@ -43,31 +43,33 @@ class SideBar extends Component {
             <hr/>
             <span className="card-title green-text text-darken-4">World's friends</span>
             <ul className="summary">
-              {others && others.map(other => {
-                let { key, value: { email, initials }} = other;
-                return(
-                  <li key={key}>
-                    <div 
-                      aria-owns={anchorEl ? 'simple-menu' : undefined}
-                      aria-haspopup="true"
-                      onClick={this.handleClick}
-                      style={{cursor: 'pointer'}}
-                    >
-                    <span className="green-text">{initials}</span>
-                    <span> {email}</span>
-                    </div>
-                    <Menu
-                      anchorEl={anchorEl}
-                      open={Boolean(anchorEl)}
-                      onClose={this.handleClose}
-                      TransitionComponent={Zoom}
-                    >
-                      <MenuItem onClick={this.handleClose}>Details</MenuItem>
-                      <MenuItem onClick={this.handleClose}>Go find!</MenuItem>
-                    </Menu>
-                  </li>
-                )
-              })}
+              {others.length ? 
+                others.map(other => {
+                  let { key, value: { email, initials }} = other;
+                  return(
+                    <li key={key}>
+                      <div 
+                        aria-owns={anchorEl ? 'simple-menu' : undefined}
+                        aria-haspopup="true"
+                        onClick={this.handleClick}
+                        style={{cursor: 'pointer'}}
+                      >
+                      <span className="green-text">{initials}</span>
+                      <span> {email}</span>
+                      </div>
+                      <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={this.handleClose}
+                        TransitionComponent={Zoom}
+                      >
+                        <MenuItem onClick={this.handleClose}>Details</MenuItem>
+                        <MenuItem onClick={this.handleClose}>Go find!</MenuItem>
+                      </Menu>
+                    </li>
+                  )}) :
+                <span className="green-text">Alone at World... :'(</span>
+              }
             </ul>
           </div>
         </div>

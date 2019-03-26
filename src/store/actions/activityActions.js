@@ -1,6 +1,6 @@
 import googleMapsClient from '../../config/gmConfig';
 
-export const sendCurrentStatus = status => {
+export const sendCurrentStatus = () => {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();
     const { uid, email } = getState().firebase.auth;

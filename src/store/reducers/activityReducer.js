@@ -1,6 +1,7 @@
 const initState = {
   updateError: null,
-  address: '',
+  address: null,
+  targetUser: null,
 };
 
 const activityReducer = (state = initState, action) => {
@@ -15,13 +16,13 @@ const activityReducer = (state = initState, action) => {
       console.log('Status update error');
       return {
         ...state,
-        authError: 'Status update failed'
+        updateError: 'Status update failed'
       }
     case 'GET_GEOLOCATION_ERROR':
       console.log('Get location error');
       return {
         ...state,
-        authError: 'Get location failed',
+        updateError: 'Get location failed',
       }
     case 'REVERSE_GEOCODE_SUCCESS':
       console.log('Reverse geocode sucess');
@@ -30,12 +31,12 @@ const activityReducer = (state = initState, action) => {
         address: action.address,
         updateError: null,
       }
-      case 'REVERSE_GEOCODE_ERROR':
-        console.log('Reverse geocode failed');
-        return {
-          ...state,
-        authError: 'Reverse geocode failed',
-        }
+    case 'REVERSE_GEOCODE_ERROR':
+      console.log('Reverse geocode failed');
+      return {
+        ...state,
+        updateError: 'Reverse geocode failed',
+      }
     case 'CREATE_USER_SUCCESS':
       console.log('Create user sucess');
       return {
@@ -46,7 +47,14 @@ const activityReducer = (state = initState, action) => {
       console.log('Delete user sucess');
       return {
         ...state,
-        authError: null
+        updateError: null
+      }
+    case 'SELECT_TARGET_USER_SUCCESS':
+      console.log('Select target user sucess');
+      return {
+        ...state,
+        targetUser: action.targetUser,
+        updateError: null,
       }
     default:
       return state;
