@@ -30,12 +30,14 @@ class SideBar extends Component {
   }
 
   handleClickFind = e => {
-    const { users, address: { coordinates: origin } } = this.props;
+    const { users, address: { coordinates, placeId } } = this.props;
     const { id: targetId } = e.target;
     const { value: { coordinates: target } } = filter(users, ['key', targetId])[0] || {};
 
+    const origin = { ...coordinates, placeId };
+    
+    this.props.getRoute(origin, target);
     this.setState({ anchorEl: null, targetId });
-    this.props.getRoute(origin, target)
   }
   
   render () {

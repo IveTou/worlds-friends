@@ -37,7 +37,11 @@ export const sendCurrentStatus = () => {
           .asPromise()
           .then(res => dispatch({ 
             type: 'REVERSE_GEOCODE_SUCCESS', 
-            address: { formatted: res.json.results[0].formatted_address, coordinates } 
+            address: { 
+              formatted: res.json.results[0].formatted_address, 
+              coordinates, //There is a little difference from the coordinate retrieved from API
+              placeId: res.json.results[0].place_id, 
+            } 
           }))
           .catch(err => dispatch({ type: 'REVERSE_GEOCODE_ERROR', err}));
       },
