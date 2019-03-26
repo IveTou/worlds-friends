@@ -9,29 +9,41 @@ const initState = {
 };
 
 const dialogReducer = (state = initState, action) => {
-  switch(action.type) {
+  const { 
+    type, 
+    status: { 
+      title, 
+      message, 
+      hasProgress, 
+      countDown,
+      agree,
+      disagree,
+    },
+  } = action;
+
+  switch(type) {
     case 'OPEN_DIALOG':
       console.log('Open dialog');
       return {
         ...state,
         open: true,
-        title: action.title,
-        message: action.message,
-        hasProgress: action.hasProgress,
-        countDown: action.countDown,
-        agree: action.agree,
-        disagree: action.disagree,
+        title,
+        message,
+        hasProgress,
+        countDown,
+        agree,
+        disagree,
       };
     case 'CHANGE_DIALOG':
       console.log('Change dialog');
       return {
         ...state,
-        title: action.title,
-        message: action.message,
-        hasProgress: action.hasProgress,
-        countDown: action.countDown,
-        agree: action.agree,
-        disagree: action.disagree,
+        title,
+        message,
+        hasProgress,
+        countDown,
+        agree,
+        disagree,
       };
     case 'CLOSE_DIALOG':
       console.log('Close dialog.');

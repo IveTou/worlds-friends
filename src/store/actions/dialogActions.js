@@ -1,5 +1,17 @@
-export const getRoutes = () => {
-  return (dispatch, getState) => {
-    dispatch({ type: 'STATUS_UPDATE_SUCCESS' });
+export const openDialog = status => {
+  return (dispatch) => {
+    dispatch({ type: 'OPEN_DIALOG', status });
+  }
+}
+
+export const changeDialog = status => {
+  return (dispatch) => {
+    dispatch({ type: 'OPEN_DIALOG', status });
+  }
+}
+
+export const closeDialog = () => {
+  return (dispatch) => {
+    dispatch({ type: 'OPEN_DIALOG' });
   }
 }
