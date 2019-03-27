@@ -10,13 +10,13 @@ const activityReducer = (state = initState, action) => {
       console.log('Status update sucess');
       return {
         ...state,
+        address: action.address,
         updateError: null,
       }
     case 'STATUS_UPDATE_ERROR':
       console.log('Status update error');
       return {
         ...state,
-        address: action.address,
         updateError: 'Status update failed'
       }
     case 'GET_GEOLOCATION_ERROR':
@@ -26,14 +26,14 @@ const activityReducer = (state = initState, action) => {
         updateError: 'Get location failed',
       }
     case 'REVERSE_GEOCODE_SUCCESS':
-      console.log('Reverse geocode sucess');
+      console.log('Reverse geocode sucess', action.address);
       return {
         ...state,
         address: action.address,
         updateError: null,
       }
     case 'REVERSE_GEOCODE_ERROR':
-      console.log('Reverse geocode failed');
+      console.log('Reverse geocode failed', action.err);
       return {
         ...state,
         updateError: 'Reverse geocode failed',

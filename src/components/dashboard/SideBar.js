@@ -4,9 +4,9 @@ import { Menu, MenuItem, Zoom } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
-import { filter, reject } from 'lodash';
+import { filter, isEmpty, reject, pick } from 'lodash';
 
-import { getRoute } from '../../store/actions/activityActions';
+import { getRoute, getDetailedInfo } from '../../store/actions/activityActions';
 
 class SideBar extends Component {
   constructor(props) {
@@ -14,7 +14,28 @@ class SideBar extends Component {
    
     this.state = {
       anchorEl: null,
+      targetId: null,
+      address: null,
     }
+  }
+
+  componentDidUpdate() {
+    const { address: addressProps } = this.props;
+    const { address: addressState } = this.state;
+
+    if(isEmpty(addressState) && !isEmpty(addressProps)) {
+      console.log('dif  ',addressState);
+      console.log('dif  ',addressProps);
+      this.setState({ address: addressProps }, () => this.props.getDetailedInfo());
+    }
+    //console.log('dif  ',corState.latitude);
+    
+    /* if(!!placeIdProps !== !!placeId) {
+      //this.setState({ address }, () => this.props.getDetailedInfo());
+      console.log('dif  ',placeIdProps);
+      console.log('dif  ',placeId);
+      this.setState({ address: addressProps });
+    } */
   }
 
   handleClick = event => {
@@ -35,7 +56,7 @@ class SideBar extends Component {
     const { value: { coordinates: target } } = filter(users, ['key', targetId])[0] || {};
 
     const origin = { ...coordinates, placeId };
-    
+
     this.props.getRoute(origin, target);
     this.setState({ anchorEl: null, targetId });
   }
@@ -44,6 +65,7 @@ class SideBar extends Component {
     const { anchorEl } = this.state;
     const { address, uid, profile, users } = this.props;
     const others = reject(users, ['key', uid]) || [];
+    const { formatted } = address || {};
 
     return (
       <div className="section">
@@ -54,7 +76,7 @@ class SideBar extends Component {
               <li><span className="blue-text">Hello, I'm </span><span>{profile.firstName} {profile.lastName}</span></li>
               <li>
                 <span className="blue-text">and I'm at </span>
-                <span>{address ? address.formatted : 'Wait a second...'}</span>
+                <span>{formatted || 'Wait a second...'}</span>
               </li>
             </ul>
             <hr/>
@@ -120,7 +142,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getRoute: (origin, target) => dispatch(getRoute(origin, target))
+    getRoute: (origin, target) => dispatch(getRoute(origin, target)),
+    getDetailedInfo: () => dispatch(getDetailedInfo()),
   }
 }
 

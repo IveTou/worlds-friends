@@ -1,3 +1,4 @@
+import { pick } from 'lodash';
 import googleMapsClient from '../../config/gmConfig';
 
 export const sendCurrentStatus = () => {
@@ -44,24 +45,35 @@ export const sendCurrentStatus = () => {
 }
 
 export const getDetailedInfo = () => {
-  return (dispatch, getState, { getFirebase }) => {
-    console.log(getState().activity.adress);
-    /* const { coordinates: { latitude, longitude }} = getState().activity.address;
+  return (dispatch, getState ) => {
+    const { coordinates: { latitude, longitude }} = getState().activity.address;
 
     googleMapsClient.geocode({ address:[latitude, longitude].join() })
       .asPromise()
-      .then(res => dispatch({ 
-        type: 'REVERSE_GEOCODE_SUCCESS', 
-        address: { 
-          formatted: res.json.results[0].formatted_address, 
-          coordinates: {}, //There is a little difference from the coordinate retrieved from API
-          placeId: res.json.results[0].place_id, 
-          response: res.json.results[0],
-        } 
-      }))
-      .catch(err => dispatch({ type: 'REVERSE_GEOCODE_ERROR', err})); */
+      .then(res => {
+        const address = pick(res.json.results[0], ['formatted_address', 'place_id']);
+        const { geometry: { location: { lat: latitude, lng: longitude}}} = res.json.results[0];
+        dispatch({ 
+          type: 'REVERSE_GEOCODE_SUCCESS',
+          address: {
+            ...address,
+            coordinates: { latitude, longitude }
+          }
+        });
+      })
+      .catch(err => dispatch({ type: 'REVERSE_GEOCODE_ERROR', err}));
   }
 }
+
+/* dispatch({ 
+  type: 'REVERSE_GEOCODE_SUCCESS', 
+  address: { 
+    formatted: res.json.results[0].formatted_address, 
+    coordinates: {}, //There is a little difference from the coordinate retrieved from API
+    placeId: res.json.results[0].place_id, 
+    response: res.json.results[0],
+  } 
+}) */
 
 export const getRoute = (origin, target) => {
   return (dispatch, getState, { getFirebase }) => {
