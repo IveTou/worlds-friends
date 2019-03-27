@@ -16,6 +16,7 @@ const activityReducer = (state = initState, action) => {
       console.log('Status update error');
       return {
         ...state,
+        address: action.address,
         updateError: 'Status update failed'
       }
     case 'GET_GEOLOCATION_ERROR':

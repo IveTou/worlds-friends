@@ -27,12 +27,13 @@ const MapLive = ({ users, uid }) =>
       }
     }>
     {users && users.map(user => {
-      const { value: { coordinates }} = user;
+      const { coordinates } = user.value.address
+      const { latitude, longitude } = coordinates;
       return coordinates && <MarkerWithLabel
         clickable={uid !== user.key} 
         position={{ 
-          lat: coordinates.latitude, 
-          lng: coordinates.longitude,
+          lat: latitude, 
+          lng: longitude,
         }} 
         key={user.key}
         labelAnchor={{x: 8, y: 44}}

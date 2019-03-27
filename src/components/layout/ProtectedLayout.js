@@ -36,7 +36,7 @@ class ProtectedLayout extends Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    sendCurrentStatus: () => dispatch(sendCurrentStatus())
+    sendCurrentStatus: () => dispatch(sendCurrentStatus()),
   }
 }
 
