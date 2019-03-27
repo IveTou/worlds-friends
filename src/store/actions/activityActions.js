@@ -5,7 +5,8 @@ export const sendCurrentStatus = () => {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();
     const { uid, email } = getState().firebase.auth;
-    const { initials } = getState().firebase.profile;
+    const { initials, isEmpty } = getState().firebase.profile;
+    const adressState = getState().activity.address || {};
 
     const options = {
       enableHighAccuracy: true,
@@ -17,13 +18,14 @@ export const sendCurrentStatus = () => {
     uid && navigator.geolocation.getCurrentPosition(
       pos => {
         const address =  {
+          ...adressState,
           coordinates: { 
             longitude: pos.coords.longitude, 
             latitude: pos.coords.latitude,
           } 
         };
 
-        firebase.database().ref().child('users').child(uid).update({
+        !isEmpty && firebase.database().ref().child('users').child(uid).update({
           email,
           initials,
           timestamp: firebase.database.ServerValue.TIMESTAMP, 
@@ -51,12 +53,13 @@ export const getDetailedInfo = () => {
     googleMapsClient.geocode({ address:[latitude, longitude].join() })
       .asPromise()
       .then(res => {
-        const address = pick(res.json.results[0], ['formatted_address', 'place_id']);
+        const {formatted_address: formatted, place_id: placeId } = pick(res.json.results[0], ['formatted_address', 'place_id']);
         const { geometry: { location: { lat: latitude, lng: longitude}}} = res.json.results[0];
         dispatch({ 
           type: 'REVERSE_GEOCODE_SUCCESS',
           address: {
-            ...address,
+            placeId,
+            formatted,
             coordinates: { latitude, longitude }
           }
         });
@@ -64,16 +67,6 @@ export const getDetailedInfo = () => {
       .catch(err => dispatch({ type: 'REVERSE_GEOCODE_ERROR', err}));
   }
 }
-
-/* dispatch({ 
-  type: 'REVERSE_GEOCODE_SUCCESS', 
-  address: { 
-    formatted: res.json.results[0].formatted_address, 
-    coordinates: {}, //There is a little difference from the coordinate retrieved from API
-    placeId: res.json.results[0].place_id, 
-    response: res.json.results[0],
-  } 
-}) */
 
 export const getRoute = (origin, target) => {
   return (dispatch, getState, { getFirebase }) => {

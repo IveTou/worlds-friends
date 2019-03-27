@@ -4,7 +4,7 @@ import { Menu, MenuItem, Zoom } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
-import { filter, isEmpty, reject, pick } from 'lodash';
+import { filter, isEmpty, reject } from 'lodash';
 
 import { getRoute, getDetailedInfo } from '../../store/actions/activityActions';
 
@@ -24,30 +24,22 @@ class SideBar extends Component {
     const { address: addressState } = this.state;
 
     if(isEmpty(addressState) && !isEmpty(addressProps)) {
-      console.log('dif  ',addressState);
-      console.log('dif  ',addressProps);
+      this.setState({ address: addressProps }, () => this.props.getDetailedInfo());
+    } else if (!isEmpty(addressState) && !isEmpty(addressProps) && (addressState.placeId !== addressProps.placeId)) {
       this.setState({ address: addressProps }, () => this.props.getDetailedInfo());
     }
-    //console.log('dif  ',corState.latitude);
-    
-    /* if(!!placeIdProps !== !!placeId) {
-      //this.setState({ address }, () => this.props.getDetailedInfo());
-      console.log('dif  ',placeIdProps);
-      console.log('dif  ',placeId);
-      this.setState({ address: addressProps });
-    } */
   }
 
   handleClick = event => {
-    this.setState({ anchorEl: event.currentTarget, selectedId: null });
+    this.setState({ anchorEl: event.currentTarget, targetId: null });
   }
 
   handleClose = () => {
-    this.setState({ anchorEl: null, selectedId: null  });
+    this.setState({ anchorEl: null, targetId: null  });
   };
 
   handleClickDetails = e => {
-    this.setState({ anchorEl: null, selectedId: e.target.id });
+    this.setState({ anchorEl: null, targetId: e.target.id });
   }
 
   handleClickFind = e => {

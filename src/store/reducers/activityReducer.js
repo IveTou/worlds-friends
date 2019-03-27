@@ -26,7 +26,7 @@ const activityReducer = (state = initState, action) => {
         updateError: 'Get location failed',
       }
     case 'REVERSE_GEOCODE_SUCCESS':
-      console.log('Reverse geocode sucess', action.address);
+      console.log('Reverse geocode sucess');
       return {
         ...state,
         address: action.address,
