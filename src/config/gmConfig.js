@@ -16,4 +16,4 @@ export const config = {
   ownMarker:'pin-blue.png?alt=media&token=051509dc-e220-461f-9b64-e3f648ff6ad4',
 }
 
-export default googleMaps.createClient(omit(config, ['v','assetsUrl', 'onlineMarker']));
+export const googleMapsClient = googleMaps.createClient(omit(config, ['v','assetsUrl', 'onlineMarker']));

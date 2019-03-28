@@ -61,7 +61,7 @@ class SideBar extends Component {
   handleClickFind = e => {
     const { users, address: { coordinates, placeId } } = this.props;
     const { id: targetId } = e.target;
-    const { value: { coordinates: target } } = filter(users, ['key', targetId])[0] || {};
+    const { value: { address: {coordinates: target }}} = filter(users, ['key', targetId])[0] || {};
 
     const origin = { ...coordinates, placeId };
 
