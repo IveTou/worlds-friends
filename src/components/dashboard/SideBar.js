@@ -6,7 +6,9 @@ import { firebaseConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { filter, isEmpty, reject, round, transform } from 'lodash';
 
-import { getRoute, getDetailedInfo } from '../../store/actions/activityActions';
+import { getDetailedInfo } from '../../store/actions/activityActions';
+import { getRoute } from '../../store/actions/mapActions';
+
 
 class SideBar extends Component {
   constructor(props) {

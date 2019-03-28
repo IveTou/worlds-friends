@@ -50,20 +50,6 @@ const activityReducer = (state = initState, action) => {
         ...state,
         updateError: null
       }
-    case 'GET_ROUTE_SUCCESS':
-      console.log('Get route sucess', action.route);
-      return {
-        ...state,
-        route: action.route,
-        updateError: null,
-      }
-    case 'GET_ROUTE_ERROR':
-      console.log('Get route error');
-      return {
-        ...state,
-        route: null,
-        updateError: 'Get route failed',
-      }
     default:
       return state;
   }
