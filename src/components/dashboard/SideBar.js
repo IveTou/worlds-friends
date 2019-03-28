@@ -4,7 +4,7 @@ import { Menu, MenuItem, Zoom } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
-import { filter, isEmpty, reject } from 'lodash';
+import { filter, isEmpty, reject, round, transform } from 'lodash';
 
 import { getRoute, getDetailedInfo } from '../../store/actions/activityActions';
 
@@ -23,9 +23,25 @@ class SideBar extends Component {
     const { address: addressProps } = this.props;
     const { address: addressState } = this.state;
 
+    const coordinatesProps = !isEmpty(addressProps) ?
+      transform(addressProps.coordinates, (res, val, key) => {
+        res[key] = round(val, 3)
+      }) :
+      {};
+
+    const coordinatesState = !isEmpty(addressState) ?
+      transform(addressState.coordinates, (res, val, key) => {
+        res[key] = round(val, 3)
+      }) :
+      {};
+    
     if(isEmpty(addressState) && !isEmpty(addressProps)) {
       this.setState({ address: addressProps }, () => this.props.getDetailedInfo());
-    } else if (!isEmpty(addressState) && !isEmpty(addressProps) && (addressState.placeId !== addressProps.placeId)) {
+    } else if (
+      !isEmpty(addressState) && 
+      !isEmpty(addressProps) && 
+      (JSON.stringify(coordinatesState) !== JSON.stringify(coordinatesProps))
+    ) {
       this.setState({ address: addressProps }, () => this.props.getDetailedInfo());
     }
   }

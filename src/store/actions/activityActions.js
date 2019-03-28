@@ -20,8 +20,8 @@ export const sendCurrentStatus = () => {
         const address =  {
           ...adressState,
           coordinates: { 
-            longitude: pos.coords.longitude, 
             latitude: pos.coords.latitude,
+            longitude: pos.coords.longitude, 
           } 
         };
 
