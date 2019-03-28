@@ -9,7 +9,6 @@ import { filter, isEmpty, reject, round, transform } from 'lodash';
 import { getDetailedInfo } from '../../store/actions/activityActions';
 import { getRoute } from '../../store/actions/mapActions';
 
-
 class SideBar extends Component {
   constructor(props) {
     super(props)
@@ -61,14 +60,14 @@ class SideBar extends Component {
   }
 
   handleClickFind = e => {
-    const { users, address: { coordinates, placeId } } = this.props;
+    const { users, address: { coordinates, placeId }} = this.props;
     const { id: targetId } = e.target;
     const { value: { address: {coordinates: target }}} = filter(users, ['key', targetId])[0] || {};
-
     const origin = { ...coordinates, placeId };
 
-    this.props.getRoute(origin, target);
     this.setState({ anchorEl: null, targetId });
+
+    this.props.getRoute(origin, target);
   }
   
   render () {
