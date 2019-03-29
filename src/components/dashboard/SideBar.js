@@ -66,8 +66,13 @@ class SideBar extends Component {
     const origin = { ...coordinates, placeId };
 
     this.setState({ anchorEl: null, targetUserId });
+    
+    /* const so = [{
+      location: { latitude: -12.34, longitude: -38.462 },
+      stopover: true
+    }]; */
 
-    this.props.getRoute(origin, destination);
+    this.props.getRoute(origin, destination, null);
   }
   
   render () {
@@ -152,7 +157,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getRoute: (origin, destination) => dispatch(getRoute(origin, destination)),
+    getRoute: (origin, destination, stopover) => dispatch(getRoute(origin, destination, stopover)),
     getDetailedInfo: () => dispatch(getDetailedInfo()),
   }
 }
