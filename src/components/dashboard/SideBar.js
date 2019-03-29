@@ -15,7 +15,7 @@ class SideBar extends Component {
    
     this.state = {
       anchorEl: null,
-      targetId: null,
+      targetUserId: null,
       address: null,
     }
   }
@@ -48,26 +48,26 @@ class SideBar extends Component {
   }
 
   handleClick = event => {
-    this.setState({ anchorEl: event.currentTarget, targetId: null });
+    this.setState({ anchorEl: event.currentTarget, targetUserId: null });
   }
 
   handleClose = () => {
-    this.setState({ anchorEl: null, targetId: null  });
+    this.setState({ anchorEl: null, targetUserId: null  });
   };
 
   handleClickDetails = e => {
-    this.setState({ anchorEl: null, targetId: e.target.id });
+    this.setState({ anchorEl: null, targetUserId: e.target.id });
   }
 
   handleClickFind = e => {
     const { users, address: { coordinates, placeId }} = this.props;
-    const { id: targetId } = e.target;
-    const { value: { address: {coordinates: target }}} = filter(users, ['key', targetId])[0] || {};
+    const { id: targetUserId } = e.target;
+    const { value: { address: {coordinates: destination }}} = filter(users, ['key', targetUserId])[0] || {};
     const origin = { ...coordinates, placeId };
 
-    this.setState({ anchorEl: null, targetId });
+    this.setState({ anchorEl: null, targetUserId });
 
-    this.props.getRoute(origin, target);
+    this.props.getRoute(origin, destination);
   }
   
   render () {
@@ -128,7 +128,8 @@ class SideBar extends Component {
                         </MenuItem>
                       </Menu>
                     </li>
-                  )}) :
+                  )
+                }) :
                 <span className="green-text">Alone at World... :'(</span>
               }
             </ul>
@@ -151,7 +152,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getRoute: (origin, target) => dispatch(getRoute(origin, target)),
+    getRoute: (origin, destination) => dispatch(getRoute(origin, destination)),
     getDetailedInfo: () => dispatch(getDetailedInfo()),
   }
 }

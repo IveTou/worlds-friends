@@ -9,7 +9,6 @@ import {
 import { MarkerWithLabel } from 'react-google-maps/lib/components/addons/MarkerWithLabel';
 
 import { config } from '../../config/gmConfig';
-import { setMap } from '../../store/actions/mapActions';
 
 const labelStyle = {
   fontSize: "12px", 
@@ -20,7 +19,6 @@ const labelStyle = {
 
 const MapLive = ({ users, uid, ...props }) => 
   <GoogleMap 
-    ref={map => props.setMap(map)}
     defaultZoom={config.zoom} 
     defaultCenter={
       { 
@@ -56,12 +54,6 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    setMap: map => dispatch(setMap(map)),
-  }
-}
-
 export default compose(
   withProps({
     googleMapURL: `${config.url}key=${config.key}&v=${config.v}`,
@@ -71,5 +63,5 @@ export default compose(
   }),
   withScriptjs,
   withGoogleMap,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps),
 )(MapLive);

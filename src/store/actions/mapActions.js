@@ -1,20 +1,23 @@
-export const setMap = map => {
-  return dispatch => {
-    if(map) {
-      dispatch({ type: 'SET_MAP_SUCCESS', map });
-    } else {
-      dispatch({ type: 'SET_MAP_ERROR' });
-    }
-  }
-}
-
-export const getRoute = (origin, target) => {
+export const getRoute = (ori, des) => {
   return (dispatch, getState ) => {
-    const map = getState().map.map;
-    const directionsService = new window.google.maps.DirectionsService();
-    const directionsDisplay = new window.google.maps.DirectionsRenderer();  
-    console.log(map);
-    const route = { origin, target };
-    dispatch({ type: 'GET_ROUTE_SUCCESS', route});
+    const googleMaps = window.google.maps;
+    const DirectionsService = new googleMaps.DirectionsService();
+    console.log(ori);
+    const origin = { placeId: ori.placeId} || { lat: ori.latitude, lng:  ori.latitude };
+    const destination = { lat: des.latitude, lng:  des.latitude };
+    //Maybe in the future I will take destination PlaceId too. We must to study the real advantage
+
+    DirectionsService.route({
+      origin,
+      destination,
+      travelMode: googleMaps.TravelMode.DRIVING,
+      }, (result, status) => {
+        if (status === googleMaps.DirectionsStatus.OK) {
+          dispatch({ type: 'GET_ROUTE_SUCCESS', result});
+        } else {
+          dispatch({ type: 'GET_ROUTE_ERROR', status});
+        }
+      }
+    );
   }
 }
