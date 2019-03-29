@@ -1,6 +1,6 @@
 import { map } from 'lodash';
 
-export const getRoute = (ori, des, way) => {
+export const getDirections = (ori, des, way) => {
   return (dispatch, getState ) => {
     const googleMaps = window.google.maps;
     const DirectionsService = new googleMaps.DirectionsService();
@@ -36,9 +36,9 @@ export const getRoute = (ori, des, way) => {
       }, 
       (result, status) => {
         if (status === googleMaps.DirectionsStatus.OK) {
-          dispatch({ type: 'GET_ROUTE_SUCCESS', result});
+          dispatch({ type: 'GET_DIRECTIONS_SUCCESS', result});
         } else {
-          dispatch({ type: 'GET_ROUTE_ERROR', status});
+          dispatch({ type: 'GET_DIRECTIONS_ERROR', status});
         }
       }
     );

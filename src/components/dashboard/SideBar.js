@@ -7,7 +7,7 @@ import { compose } from 'redux';
 import { filter, isEmpty, reject, round, transform } from 'lodash';
 
 import { getDetailedInfo } from '../../store/actions/activityActions';
-import { getRoute } from '../../store/actions/mapActions';
+import { getDirections } from '../../store/actions/mapActions';
 
 class SideBar extends Component {
   constructor(props) {
@@ -72,7 +72,7 @@ class SideBar extends Component {
       stopover: true
     }]; */
 
-    this.props.getRoute(origin, destination, null);
+    this.props.getDirections(origin, destination, null);
   }
   
   render () {
@@ -151,13 +151,12 @@ const mapStateToProps = state => {
     profile: state.firebase.profile,
     uid: state.firebase.auth.uid,
     address: state.activity.address,
-    route: state.activity.route,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    getRoute: (origin, destination, stopover) => dispatch(getRoute(origin, destination, stopover)),
+    getDirections: (origin, destination, stopover) => dispatch(getDirections(origin, destination, stopover)),
     getDetailedInfo: () => dispatch(getDetailedInfo()),
   }
 }

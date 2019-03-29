@@ -1,7 +1,6 @@
 const initState = {
   updateError: null,
   address: null,
-  route: null,
 };
 
 const activityReducer = (state = initState, action) => {

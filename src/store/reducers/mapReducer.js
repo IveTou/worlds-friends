@@ -1,5 +1,5 @@
 const initState = {
-  route: null,
+  directions: null,
   mapError: null,
 };
 
@@ -9,14 +9,14 @@ const activityReducer = (state = initState, action) => {
       console.log('Get route sucess', action.result);
       return {
         ...state,
-        route: action.route,
+        directions: action.result,
         mapError: null,
       }
     case 'GET_ROUTE_ERROR':
       console.log('Get route error: \n', action.status);
       return {
         ...state,
-        route: null,
+        directions: null,
         mapError: `Get route failed with status: ${action.status}`,
       }
     default:
