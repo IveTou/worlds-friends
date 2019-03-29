@@ -5,6 +5,7 @@ import {
   withScriptjs,
   withGoogleMap,
   GoogleMap,
+  DirectionsRenderer,
 } from "react-google-maps";
 import { MarkerWithLabel } from 'react-google-maps/lib/components/addons/MarkerWithLabel';
 
@@ -17,7 +18,7 @@ const labelStyle = {
   fontWeight: 500,
 }
 
-const MapLive = ({ users, uid, ...props }) => 
+const MapLive = ({ users, uid, directions }) => 
   <GoogleMap 
     defaultZoom={config.zoom} 
     defaultCenter={
@@ -46,11 +47,13 @@ const MapLive = ({ users, uid, ...props }) =>
         </MarkerWithLabel>
       }
     )}
+    {directions && <DirectionsRenderer directions={directions} />}
   </GoogleMap>
 
 const mapStateToProps = state => {
   return {
     uid: state.firebase.auth.uid,
+    directions: state.map.directions,
   }
 }
 
