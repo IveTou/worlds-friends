@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Menu, MenuItem, Zoom } from '@material-ui/core';
 
 import { connect } from 'react-redux';
-import { firebaseConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { filter, isEmpty, reject, round, transform } from 'lodash';
 
@@ -147,7 +146,6 @@ class SideBar extends Component {
 
 const mapStateToProps = state => {
   return {
-    users: state.firebase.ordered.users,
     profile: state.firebase.profile,
     uid: state.firebase.auth.uid,
     address: state.activity.address,
@@ -163,5 +161,4 @@ const mapDispatchToProps = dispatch => {
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-  firebaseConnect(['users']),
  )(SideBar);
