@@ -10,12 +10,12 @@ import SideBar from '../dashboard/SideBar';
 
 class MapCanvas extends Component {
   render() {
-    const { users, notifications } = this.props;
+    const { directions, users, notifications } = this.props;
     return (
       <div className="dashboard container">
         <div className="row">
           <div className="col s12 m3">
-            <SideBar users={users}/>
+            <SideBar users={users} hasDirections={!!directions}/>
           </div>
           <div 
             className="col s12 m6" 
@@ -25,7 +25,7 @@ class MapCanvas extends Component {
               paddingBottom: '1rem',
             }}
           >
-            <MapLive users={users} />
+            <MapLive users={users} directions={directions} />
           </div>
           <div className="col s12 m3">
             <Notifications notifications={notifications} />
@@ -40,6 +40,7 @@ const mapStateToProps = state => {
   return {
     users: state.firebase.ordered.users,
     notifications: state.firestore.ordered.notifications,
+    directions: state.map.directions,
   }
 }
 

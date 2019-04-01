@@ -1,7 +1,13 @@
 import { map } from 'lodash';
 
+export const setMap = map => {
+  return dispatch => {
+    dispatch({ type: 'SET_MAP_SUCCESS', map});
+  }
+}
+
 export const getDirections = (ori, des, way) => {
-  return (dispatch, getState ) => {
+  return dispatch => {
     const googleMaps = window.google.maps;
     const DirectionsService = new googleMaps.DirectionsService();
     
@@ -42,5 +48,11 @@ export const getDirections = (ori, des, way) => {
         }
       }
     );
+  }
+}
+
+export const eraseDirections = () => {
+  return dispatch => {
+    dispatch({ type: 'ERASE_DIRECTIONS_SUCCESS'});
   }
 }

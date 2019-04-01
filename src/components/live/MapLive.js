@@ -9,6 +9,7 @@ import {
 } from "react-google-maps";
 import { MarkerWithLabel } from 'react-google-maps/lib/components/addons/MarkerWithLabel';
 
+import { setMap } from '../../store/actions/mapActions';
 import { config } from '../../config/gmConfig';
 
 const labelStyle = {
@@ -18,8 +19,9 @@ const labelStyle = {
   fontWeight: 500,
 }
 
-const MapLive = ({ users, uid, directions }) => 
-  <GoogleMap 
+const MapLive = ({ users, uid, directions, setMap }) => 
+  <GoogleMap
+    ref={map => setMap(map)}
     defaultZoom={config.zoom} 
     defaultCenter={
       { 
@@ -59,7 +61,12 @@ const MapLive = ({ users, uid, directions }) =>
 const mapStateToProps = state => {
   return {
     uid: state.firebase.auth.uid,
-    directions: state.map.directions,
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    setMap: map => dispatch(setMap(map)),
   }
 }
 
@@ -72,5 +79,5 @@ export default compose(
   }),
   withScriptjs,
   withGoogleMap,
-  connect(mapStateToProps),
+  connect(mapStateToProps, mapDispatchToProps),
 )(MapLive);

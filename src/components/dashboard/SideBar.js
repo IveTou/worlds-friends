@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Menu, MenuItem, Zoom } from '@material-ui/core';
+import { Button, Card, CardActions, Menu, MenuItem, Zoom } from '@material-ui/core';
 
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { filter, isEmpty, reject, round, transform } from 'lodash';
 
 import { getDetailedInfo } from '../../store/actions/activityActions';
-import { getDirections } from '../../store/actions/mapActions';
+import { getDirections, eraseDirections } from '../../store/actions/mapActions';
 
 class SideBar extends Component {
   constructor(props) {
@@ -66,17 +66,19 @@ class SideBar extends Component {
 
     this.setState({ anchorEl: null, targetUserId });
     
-    /* const so = [{
-      location: { latitude: -12.34, longitude: -38.462 },
-      stopover: true
-    }]; */
+    /* const so = [
+      {
+        location: { latitude: -12.34, longitude: -38.462 },
+        stopover: true
+      },
+    ]; */
 
     this.props.getDirections(origin, destination, null);
   }
   
   render () {
     const { anchorEl } = this.state;
-    const { address, uid, profile, users } = this.props;
+    const { address, eraseDirections, hasDirections,  profile, users, uid } = this.props;
     const others = reject(users, ['key', uid]) || [];
     const { formatted } = address || {};
 
@@ -138,6 +140,13 @@ class SideBar extends Component {
               }
             </ul>
           </div>
+          {hasDirections && 
+            <CardActions>
+              <Button size="small" onClick={eraseDirections}>
+                Erase Route
+              </Button>
+            </CardActions>
+          }
         </div>
       </div>
     );
@@ -154,11 +163,12 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getDirections: (origin, destination, stopover) => dispatch(getDirections(origin, destination, stopover)),
+    getDirections: (origin, destination, waypoints) => dispatch(getDirections(origin, destination, waypoints)),
     getDetailedInfo: () => dispatch(getDetailedInfo()),
+    eraseDirections: () => dispatch(eraseDirections()),
   }
 }
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
- )(SideBar);
+)(SideBar);

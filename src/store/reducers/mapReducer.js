@@ -1,4 +1,5 @@
 const initState = {
+  map: null,
   directions: null,
   mapError: null,
 };
@@ -18,6 +19,19 @@ const activityReducer = (state = initState, action) => {
         ...state,
         directions: null,
         mapError: `Get directions failed with status: ${action.status}`,
+      }
+    case 'ERASE_DIRECTIONS_SUCCESS':
+      console.log('Erase directions succes');
+      return {
+        ...state,
+        directions: null,
+        mapError: null,
+      }
+    case 'SET_MAP_SUCCESS':
+      console.log('Set map succes');
+      return {
+        ...state,
+        map: action.map,
       }
     default:
       return state;
