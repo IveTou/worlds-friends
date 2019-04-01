@@ -25,7 +25,7 @@ export const getDirections = (ori, des, way) => {
       {
         origin,
         destination,
-        travelMode: googleMaps.TravelMode.DRIVING,
+        travelMode: googleMaps.TravelMode.WALKING,
         drivingOptions: {
           departureTime: new Date(Date.now()),
         },

@@ -26,9 +26,10 @@ const MapLive = ({ users, uid, directions }) =>
         lat: config.center.lat, 
         lng: config.center.lng,
       }
-    }>
+    }
+  >
     {users && users.map(user => {
-      const { coordinates } = user.value.address
+      const { address: { coordinates } } = user.value;
       const { latitude, longitude } = coordinates;
       return coordinates && <MarkerWithLabel
         clickable={uid !== user.key} 
@@ -47,7 +48,12 @@ const MapLive = ({ users, uid, directions }) =>
         </MarkerWithLabel>
       }
     )}
-    {directions && <DirectionsRenderer directions={directions} />}
+    {directions && 
+      <DirectionsRenderer 
+        options = {{ suppressMarkers: true }} 
+        directions = {directions} 
+      />
+    }
   </GoogleMap>
 
 const mapStateToProps = state => {
