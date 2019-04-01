@@ -7,14 +7,14 @@ const initState = {
 const activityReducer = (state = initState, action) => {
   switch(action.type) {
     case 'GET_DIRECTIONS_SUCCESS':
-      console.log('Get directions sucess', action.result);
+      console.log('Get directions sucess');
       return {
         ...state,
         directions: action.result,
         mapError: null,
       }
     case 'GET_DIRECTIONS_ERROR':
-      console.log('Get directions error: \n', action.status);
+      console.log('Get directions error');
       return {
         ...state,
         directions: null,
@@ -28,7 +28,7 @@ const activityReducer = (state = initState, action) => {
         mapError: null,
       }
     case 'SET_MAP_SUCCESS':
-      console.log('Set map succes');
+      //console.log('Set map succes');
       return {
         ...state,
         map: action.map,

@@ -19,7 +19,12 @@ const labelStyle = {
   fontWeight: 500,
 }
 
-const MapLive = ({ users, uid, directions, setMap }) => 
+const MapLive = ({ users, uid, directions, setMap }) => {
+  if(directions  && directions.routes[0].legs.length) { 
+    directions.routes[0].legs[0].steps.pop();
+  }
+
+  return (
   <GoogleMap
     ref={map => setMap(map)}
     defaultZoom={config.zoom} 
@@ -31,25 +36,30 @@ const MapLive = ({ users, uid, directions, setMap }) =>
     }
   >
     {users && users.map(user => {
-      const { address: { coordinates } } = user.value;
-      const { latitude, longitude } = coordinates;
-      return coordinates && <MarkerWithLabel
-        clickable={uid !== user.key} 
-        position={{ 
-          lat: latitude, 
-          lng: longitude,
-        }} 
-        key={user.key}
-        labelAnchor={{x: 8, y: 44}}
-        icon={uid === user.key
-          ? config.assetsUrl+config.ownMarker
-          : config.assetsUrl+config.onlineMarker
-        }
-        >
-          <label style={labelStyle}>{uid === user.key && 'Me'}</label>
-        </MarkerWithLabel>
+      const address = user.value.address || null;
+      if(address) {
+        const { coordinates: { latitude, longitude }} = address;
+        return (
+          <MarkerWithLabel
+            clickable={uid !== user.key} 
+            position={{ 
+              lat: latitude, 
+              lng: longitude,
+            }} 
+            key={user.key}
+            labelAnchor={{x: 8, y: 44}}
+            icon={uid === user.key
+              ? config.assetsUrl+config.ownMarker
+              : config.assetsUrl+config.onlineMarker
+            }
+            >
+              <label style={labelStyle}>{uid === user.key && 'Me'}</label>
+          </MarkerWithLabel>
+        )
       }
-    )}
+
+      return null;
+    })}
     {directions && 
       <DirectionsRenderer 
         options = {{ suppressMarkers: true }} 
@@ -57,6 +67,7 @@ const MapLive = ({ users, uid, directions, setMap }) =>
       />
     }
   </GoogleMap>
+  )}
 
 const mapStateToProps = state => {
   return {

@@ -56,3 +56,9 @@ export const eraseDirections = () => {
     dispatch({ type: 'ERASE_DIRECTIONS_SUCCESS'});
   }
 }
+
+export const updateDirections = () => {
+  return (dispatch, getState, { getFirebase }) => {
+    //const adressState = getState().activity.address;
+  }
+}

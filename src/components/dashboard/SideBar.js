@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Card, CardActions, Menu, MenuItem, Zoom } from '@material-ui/core';
+import { Button, CardActions, Menu, MenuItem, Zoom } from '@material-ui/core';
 
 import { connect } from 'react-redux';
 import { compose } from 'redux';
