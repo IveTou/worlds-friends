@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import NavBar from './NavBar';
 import { connect } from 'react-redux';
-import { sendCurrentStatus } from '../../store/actions/activityActions';
+import { sendPosition } from '../../store/actions/activityActions';
 
 class ProtectedLayout extends Component {
   constructor(props) {
@@ -21,7 +21,7 @@ class ProtectedLayout extends Component {
   }
 
   tick = () => {
-    this.props.sendCurrentStatus();
+    this.props.sendPosition();
   }
 
   render() {
@@ -36,7 +36,7 @@ class ProtectedLayout extends Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    sendCurrentStatus: () => dispatch(sendCurrentStatus()),
+    sendPosition: () => dispatch(sendPosition()),
   }
 }
 
