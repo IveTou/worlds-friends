@@ -25,7 +25,7 @@ export const sendPosition = () => {
         googleMapsClient.nearestRoads({ points: point })
         .asPromise()
         .then(({ json: { snappedPoints } }) => {
-          const status = snappedPoints && {
+          const status = {
             timestamp: firebase.database.ServerValue.TIMESTAMP, 
             firstName,
             lastName,
