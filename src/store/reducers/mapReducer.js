@@ -1,5 +1,6 @@
 const initState = {
   map: null,
+  targetUserId: null,
   directions: null,
   mapError: null,
 };
@@ -27,11 +28,12 @@ const activityReducer = (state = initState, action) => {
         directions: null,
         mapError: null,
       }
-    case 'SET_MAP_SUCCESS':
-      //console.log('Set map succes');
+    case 'SET_TARGET_SUCCESS':
+      console.log('Set target succes');
       return {
         ...state,
-        map: action.map,
+        targetUserId: action.tuid,
+        mapError: null,
       }
     default:
       return state;

@@ -6,7 +6,12 @@ export const sendCurrentStatus = () => {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();
     const { uid, email } = getState().firebase.auth;
-    const { initials, isEmpty } = getState().firebase.profile;
+    const { 
+      firstName, 
+      initials, 
+      isEmpty, 
+      lastName,
+    } = getState().firebase.profile;
     const adressState = getState().activity.address || {};
 
     const options = {
@@ -28,7 +33,9 @@ export const sendCurrentStatus = () => {
 
         !isEmpty && firebase.database().ref().child('users').child(uid).update({
           email,
+          firstName,
           initials,
+          lastName,
           timestamp: firebase.database.ServerValue.TIMESTAMP, 
           address,
         })

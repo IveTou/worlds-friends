@@ -1,8 +1,8 @@
 import { map } from 'lodash';
 
-export const setMap = map => {
+export const setTargetUserId = tuid => {
   return dispatch => {
-    dispatch({ type: 'SET_MAP_SUCCESS', map});
+    dispatch({ type: 'SET_TARGET_SUCCESS', tuid});
   }
 }
 
