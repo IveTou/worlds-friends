@@ -5,7 +5,7 @@ import SignUp from './components/auth/SignUp';
 import { connect } from 'react-redux';
 import DefaultLayout from './components/layout/DefaultLayout';
 import ProtectedLayout from './components/layout/ProtectedLayout';
-import MapCanvas from './components/live/MapCanvas';
+import World from './pages/world/World';
 
 class App extends Component {
   render() {
@@ -15,7 +15,7 @@ class App extends Component {
         <Switch>
           {auth.uid ?           
             <ProtectedLayout className="App">
-              <Route exact path='/' component={MapCanvas}/>
+              <Route exact path='/' component={World}/>
               <Route render={() => <Redirect to="/" />} />
             </ProtectedLayout>
             :
