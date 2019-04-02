@@ -1,53 +1,27 @@
 const initState = {
   updateError: null,
-  address: null,
+  status: null,
 };
 
 const activityReducer = (state = initState, action) => {
   switch(action.type) {
-    case 'STATUS_UPDATE_SUCCESS':
-      console.log('Status update sucess');
+    case 'SEND_POSITION_SUCCESS':
+      console.log('Send position sucess', action.status);
       return {
-        ...state,
-        address: action.address,
+        status: action.status,
         updateError: null,
       }
-    case 'STATUS_UPDATE_ERROR':
-      console.log('Status update error');
+    case 'SEND_POSITION_ERROR':
+      console.log('Send position error');
       return {
         ...state,
-        updateError: 'Status update failed'
+        updateError: 'Send position error' + action.err
       }
     case 'GET_GEOLOCATION_ERROR':
       console.log('Get location error');
       return {
         ...state,
-        updateError: 'Get location failed',
-      }
-    case 'REVERSE_GEOCODE_SUCCESS':
-      console.log('Reverse geocode sucess');
-      return {
-        ...state,
-        address: action.address,
-        updateError: null,
-      }
-    case 'REVERSE_GEOCODE_ERROR':
-      console.log('Reverse geocode failed', action.err);
-      return {
-        ...state,
-        updateError: 'Reverse geocode failed',
-      }
-    case 'CREATE_USER_SUCCESS':
-      console.log('Create user sucess');
-      return {
-        ...state,
-        updateError: null,
-      }
-    case 'DELETE_USER_SUCCESS':
-      console.log('Delete user sucess');
-      return {
-        ...state,
-        updateError: null
+        updateError: 'Get location failed' + action.err,
       }
     default:
       return state;

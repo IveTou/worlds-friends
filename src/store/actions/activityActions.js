@@ -1,56 +1,63 @@
 import { pick } from 'lodash';
-
 import { googleMapsClient } from '../../config/maps';
 
-export const sendCurrentStatus = () => {
+const geolocationOpt = {
+  enableHighAccuracy: true,
+  timeout: 5000,
+  maximumAge: 0
+};
+
+export const sendPosition = () => {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();
-    const { uid, email } = getState().firebase.auth;
+    const { uid } = getState().firebase.auth;
     const { 
-      firstName, 
-      initials, 
       isEmpty, 
-      lastName,
+      firstName, 
+      lastName, 
+      initials 
     } = getState().firebase.profile;
-    const adressState = getState().activity.address || {};
 
-    const options = {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0
-    };
+    navigator.geolocation.getCurrentPosition(
+      ({ coords: { latitude, longitude } }) => {
+        const point = [latitude, longitude].join();
 
-    //SYNC_ISSUE 
-    uid && navigator.geolocation.getCurrentPosition(
-      pos => {
-        const address =  {
-          ...adressState,
-          coordinates: { 
-            latitude: pos.coords.latitude,
-            longitude: pos.coords.longitude, 
-          } 
-        };
+        googleMapsClient.nearestRoads({ points: point })
+        .asPromise()
+        .then(({ json: { snappedPoints } }) => {
+          const status = snappedPoints && {
+            timestamp: firebase.database.ServerValue.TIMESTAMP, 
+            firstName,
+            lastName,
+            initials,
+            address: snappedPoints ?
+              { latitude, longitude } :
+              {
+                ...snappedPoints[0].location ,
+                placeId: snappedPoints[0].placeId,
+              },
+          };
 
-        !isEmpty && firebase.database().ref().child('users').child(uid).update({
-          email,
-          firstName,
-          initials,
-          lastName,
-          timestamp: firebase.database.ServerValue.TIMESTAMP, 
-          address,
-        })
-        .then(() => {
-          dispatch({ type: 'STATUS_UPDATE_SUCCESS', address });
+          !isEmpty && snappedPoints && firebase.database().ref().child('users').child(uid).update({
+            ...status,
+          })
+          .then(() => {
+            dispatch({ 
+              type: 'SEND_POSITION_SUCCESS', 
+              status: pick(status, ['timestamp', 'address'])
+            });
+          })
+          .catch(err => {
+            dispatch({ type: 'SEND_POSITION_ERROR', err })
+          });
         })
         .catch(err => {
-          dispatch({ type: 'STATUS_UPDATE_ERROR', err })
+          dispatch({ type: 'GET_GEOLOCATION_ERROR', err })
         });
       },
-      err => {
-        dispatch({ type: 'GET_GEOLOCATION_ERROR', err })
-      },
-      options
-    )
+      err => dispatch({ type: 'GET_GEOLOCATION_ERROR', err }),
+      geolocationOpt
+    );
   }
 }
 

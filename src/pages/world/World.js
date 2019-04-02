@@ -40,7 +40,7 @@ class World extends Component {
       users, 
       ({ key, value }) => ((key === uid) || !value.address) 
     ) || [];
-
+    
     return (
       <div className={classes.root}>
         <Grid container spacing={16}>
