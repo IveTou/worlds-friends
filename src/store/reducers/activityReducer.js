@@ -6,7 +6,7 @@ const initState = {
 const activityReducer = (state = initState, action) => {
   switch(action.type) {
     case 'SEND_POSITION_SUCCESS':
-      console.log('Send position sucess', action.status);
+      console.log('Send position sucess');
       return {
         status: action.status,
         updateError: null,
