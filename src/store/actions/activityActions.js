@@ -1,6 +1,6 @@
 import { pick } from 'lodash';
 
-import { googleMapsClient } from '../../config/gmConfig';
+import { googleMapsClient } from '../../config/maps';
 
 export const sendCurrentStatus = () => {
   return (dispatch, getState, { getFirebase }) => {

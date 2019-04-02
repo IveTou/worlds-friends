@@ -9,7 +9,7 @@ import {
 } from "react-google-maps";
 import { MarkerWithLabel } from 'react-google-maps/lib/components/addons/MarkerWithLabel';
 
-import { config } from '../../config/gmConfig';
+import { config } from '../../config/maps';
 
 const labelStyle = {
   fontSize: "12px", 
