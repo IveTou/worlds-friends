@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Paper, Menu, MenuItem, Zoom } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
-import { setTargetUserId } from '../../store/actions/mapActions';
+import { setTargetUserId } from '../../store/actions/mapsActions';
 
 const styles = theme => ({
   paper: {

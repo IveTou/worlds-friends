@@ -1,8 +1,8 @@
 const initState = {
-  map: null,
+  maps: null,
   targetUserId: null,
   directions: null,
-  mapError: null,
+  mapsError: null,
 };
 
 const activityReducer = (state = initState, action) => {
@@ -12,14 +12,14 @@ const activityReducer = (state = initState, action) => {
       return {
         ...state,
         targetUserId: action.tuid,
-        mapError: null,
+        mapsError: null,
       }
     case 'SET_MAP_SUCCESS':
       console.log('Set map succes');
       return {
         ...state,
-        map: action.map,
-        mapError: null,
+        maps: action.maps,
+        mapsError: null,
       }
     default:
       return state;

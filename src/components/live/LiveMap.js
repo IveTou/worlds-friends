@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { Paper } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { map } from 'lodash';
 
-import { setMap } from '../../store/actions/mapActions';
-import { config } from '../../config/maps';
+import { Paper } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+
+import { setMaps } from '../../store/actions/mapsActions';
 
 const styles = theme => ({
   paper: {
@@ -13,42 +14,27 @@ const styles = theme => ({
     textAlign: 'left',
     color: theme.palette.text.secondary,
   },
-  map: {
+  maps: {
     height: theme.spacing.unit * 40,
   }
 });
 
 export class LiveMap extends Component {
-  initMap(comp, opt){
-    const map = new window.google.maps.Map(comp, {...opt});
-    this.props.setMap(map);
+
+  initMap(comp, opt) {
+    const maps = new window.google.maps.Map(comp, {...opt});
+    this.props.setMaps(maps);
   }
 
   componentDidMount() {
-    this.initMap(document.getElementById('map'), this.props.options);
+    this.initMap(document.getElementById('maps'), this.props.options);
   }
 
-  componentDidUpdate() {
-    const { map, uid, users } = this.props;
+  componentDidUpdate({ markers: prevMarkers}) {
+    const { maps, markers } = this.props;
 
-    /* const userMarker = user 
-      ? { 
-          ...user.value.address, 
-          icon: config.assetsUrl+config.ownMarker,
-        } 
-      : {};
-
-    console.log(userMarker);
-
-    new window.google.maps.Marker({ 
-      position: { 
-        lat: userMarker.latitude, 
-        lng: userMarker.longitude, 
-      },
-      icon: userMarker.icon,
-      map,
-    }); */
-
+    map(prevMarkers, marker => marker.setMap(null)); 
+    map(markers, marker => marker.setMap(maps));
   }
 
   render() {
@@ -58,7 +44,7 @@ export class LiveMap extends Component {
       <Paper className={classes.paper}>
         <h5>{title}</h5>
         <hr/>
-        <div className={classes.map} id='map'/>
+        <div className={classes.maps} id='maps'/>
       </Paper>
     )
   }
@@ -66,13 +52,13 @@ export class LiveMap extends Component {
 
 const mapStateToProps = state => {
   return {
-    map: state.map.map,
+    maps: state.maps.maps,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    setMap: map => dispatch(setMap(map)),
+    setMaps: maps => dispatch(setMaps(maps)),
   }
 }
 

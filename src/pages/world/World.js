@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
-import { reject, filter, pick } from 'lodash';
+import { reject, pick, map } from 'lodash';
 
 import { withStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
@@ -38,6 +38,16 @@ class World extends Component {
 
     const others = reject(users, ({ key, value }) => ((key === uid) || !value.address)) || [];
     const options = pick(config, ['center','zoom']);
+    
+    const markers = map(users, user => {
+      const { value: { address: { latitude, longitude }}, key } = user;
+      const position = new window.google.maps.LatLng(latitude, longitude);
+      const icon = key === uid 
+        ? config.assetsUrl+config.ownMarker
+        : config.assetsUrl+config.onlineMarker;
+
+      return new window.google.maps.Marker({ position, icon })
+    });
 
     return (
       <div className={classes.root}>
@@ -47,17 +57,15 @@ class World extends Component {
               address={null}
               firstName={firstName}
               lastName={lastName}
-              uid={uid}
               users={others} 
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <LiveMap 
-              title="Map" 
-              others={others}
-              users={users}
-              uid={uid}
-              options={options}
+              markers={markers}
+              options={options} 
+              title="Map"
+              users={users}              
             />
           </Grid>
           <Grid item xs={12} sm={3}>

@@ -6,9 +6,9 @@ export const setTargetUserId = tuid => {
   }
 }
 
-export const setMap = map => {
+export const setMaps = maps => {
   return dispatch => {
-    dispatch({ type: 'SET_MAP_SUCCESS', map});
+    dispatch({ type: 'SET_MAP_SUCCESS', maps});
   }
 }
 

@@ -43,6 +43,15 @@
 
     this.props.getDirections(origin, destination, null);
   }
-  } */
+  } 
+  
+  
+  //MAP.JS
+
+  if(directions  && directions.routes[0].legs.length) { 
+    directions.routes[0].legs[0].steps.pop();
+  }
+  
+  */
 
  
