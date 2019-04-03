@@ -5,7 +5,7 @@ const initState = {
   mapsError: null,
 };
 
-const activityReducer = (state = initState, action) => {
+const mapsReducer = (state = initState, action) => {
   switch(action.type) {
     case 'SET_TARGET_SUCCESS':
       console.log('Set target succes');
@@ -26,4 +26,4 @@ const activityReducer = (state = initState, action) => {
   }
 }
 
-export default activityReducer;
+export default mapsReducer;

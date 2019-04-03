@@ -31,8 +31,10 @@ export class LiveMap extends Component {
   }
 
   componentDidUpdate({ markers: prevMarkers}) {
-    const { maps, markers } = this.props;
+    const { maps, markers, options } = this.props;
 
+    maps.setCenter(options.center);
+    
     map(prevMarkers, marker => marker.setMap(null)); 
     map(markers, marker => marker.setMap(maps));
   }

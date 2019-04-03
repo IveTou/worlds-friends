@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
-import { reject, pick, map } from 'lodash';
+import { reject, filter, map } from 'lodash';
 
 import { withStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
@@ -37,7 +37,14 @@ class World extends Component {
     } = this.props;
 
     const others = reject(users, ({ key, value }) => ((key === uid) || !value.address)) || [];
-    const options = pick(config, ['center','zoom']);
+    const user = filter(users, ({ key, value }) => ((key === uid) || !value.address))[0] || [];
+    const options = { 
+      center: {
+        lat: user.value ? user.value.address.latitude : -12.98,
+        lng: user.value ? user.value.address.longitude : -38.47,
+      },
+      zoom: 13,
+    };
     
     const markers = map(users, user => {
       const { value: { address: { latitude, longitude }}, key } = user;
@@ -79,7 +86,6 @@ class World extends Component {
 
 const mapStateToProps = state => {
   return {
-    address: state.activity.address,
     profile: state.firebase.profile,
     uid: state.firebase.auth.uid,
     users: state.firebase.ordered.users,
