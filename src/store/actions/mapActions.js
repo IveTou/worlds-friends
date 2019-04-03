@@ -6,6 +6,12 @@ export const setTargetUserId = tuid => {
   }
 }
 
+export const setMap = map => {
+  return dispatch => {
+    dispatch({ type: 'SET_MAP_SUCCESS', map});
+  }
+}
+
 export const getDirections = (ori, des, way) => {
   return dispatch => {
     const googleMaps = window.google.maps;

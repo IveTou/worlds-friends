@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import DefaultLayout from './components/layout/DefaultLayout';
 import ProtectedLayout from './components/layout/ProtectedLayout';
 import World from './pages/world/World';
-import Ways from './pages/ways/Ways';
 
 class App extends Component {
   render() {
@@ -17,7 +16,6 @@ class App extends Component {
           {auth.uid ?           
             <ProtectedLayout className="App">
               <Route exact path='/' component={World}/>
-              <Route exact path='/finding-ways' component={Ways} />
               <Route render={() => <Redirect to="/" />} />
             </ProtectedLayout>
             :

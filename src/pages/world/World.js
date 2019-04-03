@@ -3,14 +3,16 @@ import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
-import { reject } from 'lodash';
-
+import { reject, filter, pick } from 'lodash';
 
 import { withStyles } from '@material-ui/core/styles';
-import { Paper, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 
 import Notifications from '../../components/dashboard/Notifications';
 import Profile from '../../components/dashboard/Profile';
+import LiveMap from '../../components/live/LiveMap';
+
+import { config } from '../../config/maps';
 
 const styles = theme => ({
   root: {
@@ -18,11 +20,10 @@ const styles = theme => ({
     maxWidth: theme.spacing.unit * 128,
     margin: '0 auto',
   },
-  paper: {
-    padding: theme.spacing.unit * 2,
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
+  grid: {
+    width: 'auto',
+    margin: 0,
+  }
 });
 
 class World extends Component {
@@ -35,15 +36,12 @@ class World extends Component {
       users,
     } = this.props;
 
-    const others = 
-    reject(
-      users, 
-      ({ key, value }) => ((key === uid) || !value.address) 
-    ) || [];
-    
+    const others = reject(users, ({ key, value }) => ((key === uid) || !value.address)) || [];
+    const options = pick(config, ['center','zoom']);
+
     return (
       <div className={classes.root}>
-        <Grid container spacing={16}>
+        <Grid container spacing={16} className={classes.grid}>
           <Grid item xs={12} sm={3}>
             <Profile 
               address={null}
@@ -54,7 +52,13 @@ class World extends Component {
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Paper className={classes.paper}>xs=12 sm=6</Paper>
+            <LiveMap 
+              title="Map" 
+              others={others}
+              users={users}
+              uid={uid}
+              options={options}
+            />
           </Grid>
           <Grid item xs={12} sm={3}>
             <Notifications notifications={notifications}/>

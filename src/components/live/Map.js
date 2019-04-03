@@ -1,3 +1,4 @@
+//DEPRECATED
 import React from 'react';
 import { compose, withProps } from "recompose";
 import { connect } from 'react-redux'

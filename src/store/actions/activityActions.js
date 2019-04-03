@@ -36,8 +36,8 @@ export const sendPosition = () => {
             dispatch, 
             firebase, 
             uid, 
-            status,
             {
+              ...status,
               ...snappedPoints[0].location ,
               placeId: snappedPoints[0].placeId,
             }
@@ -48,7 +48,7 @@ export const sendPosition = () => {
           dispatch({ 
             type: 'GET_GEOLOCATION_ERROR', 
             err: err + (!isEmpty && `Due to the error, the navigator's geolocation has placed.`), 
-          })
+          });
         });
       },
       err => dispatch({ type: 'GET_GEOLOCATION_ERROR', err }),
@@ -57,11 +57,8 @@ export const sendPosition = () => {
   }
 }
 
-const storeUserStatus = (dispatch, firebase, uid, status, address) => {
-  firebase.database().ref().child('users').child(uid).update({
-    ...status,
-    address,
-  })
+const storeUserStatus = (dispatch, firebase, uid, status) => {
+  firebase.database().ref().child('users').child(uid).update({...status})
   .then(() => {
     dispatch({ 
       type: 'SEND_POSITION_SUCCESS', 
@@ -73,7 +70,7 @@ const storeUserStatus = (dispatch, firebase, uid, status, address) => {
   });
 }
 
-export const getDetailedInfo = () => {
+/* export const getDetailedInfo = () => {
   return (dispatch, getState ) => {
     const { coordinates: { latitude, longitude }} = getState().activity.address;
 
@@ -93,4 +90,4 @@ export const getDetailedInfo = () => {
       })
       .catch(err => dispatch({ type: 'REVERSE_GEOCODE_ERROR', err}));
   }
-}
+} */
