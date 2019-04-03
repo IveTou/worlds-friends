@@ -7,7 +7,7 @@ const geolocationOpt = {
   maximumAge: 0
 };
 
-export const sendPosition = () => {
+export const sendPosition = (hasRoadCorrection = false) => {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();
     const { uid } = getState().firebase.auth;
@@ -29,27 +29,29 @@ export const sendPosition = () => {
           address: { latitude, longitude },
         }
 
-        googleMapsClient.nearestRoads({ points: point })
-        .asPromise()
-        .then(({ json: { snappedPoints } }) => {
-          !isEmpty && snappedPoints && storeUserStatus(
-            dispatch, 
-            firebase, 
-            uid, 
-            {
-              ...status,
-              ...snappedPoints[0].location ,
-              placeId: snappedPoints[0].placeId,
-            }
-          );
-        })
-        .catch(err => {
-          !isEmpty && storeUserStatus(dispatch, firebase, uid, status);
-          dispatch({ 
-            type: 'GET_GEOLOCATION_ERROR', 
-            err: err + (!isEmpty && `Due to the error, the navigator's geolocation has placed.`), 
-          });
-        });
+        hasRoadCorrection 
+        ? googleMapsClient.nearestRoads({ points: point })
+          .asPromise()
+          .then(({ json: { snappedPoints } }) => {
+            !isEmpty && snappedPoints && storeUserStatus(
+              dispatch, 
+              firebase, 
+              uid, 
+              {
+                ...status,
+                ...snappedPoints[0].location ,
+                placeId: snappedPoints[0].placeId,
+              }
+            );
+          })
+          .catch(err => {
+            !isEmpty && storeUserStatus(dispatch, firebase, uid, status);
+            dispatch({ 
+              type: 'GET_GEOLOCATION_ERROR', 
+              err: err + (!isEmpty && `Due to the error, the navigator's geolocation has placed.`), 
+            });
+          })
+        : !isEmpty && storeUserStatus(dispatch, firebase, uid, status);
       },
       err => dispatch({ type: 'GET_GEOLOCATION_ERROR', err }),
       geolocationOpt
@@ -59,15 +61,15 @@ export const sendPosition = () => {
 
 const storeUserStatus = (dispatch, firebase, uid, status) => {
   firebase.database().ref().child('users').child(uid).update({...status})
-  .then(() => {
-    dispatch({ 
-      type: 'SEND_POSITION_SUCCESS', 
-      status: pick(status, ['timestamp', 'address'])
+    .then(() => {
+      dispatch({ 
+        type: 'SEND_POSITION_SUCCESS', 
+        status: pick(status, ['timestamp', 'address'])
+      });
+    })
+    .catch(err => {
+      dispatch({ type: 'SEND_POSITION_ERROR', err })
     });
-  })
-  .catch(err => {
-    dispatch({ type: 'SEND_POSITION_ERROR', err })
-  });
 }
 
 /* export const getDetailedInfo = () => {
