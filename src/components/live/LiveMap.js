@@ -64,20 +64,20 @@ export class LiveMap extends Component {
 
       service.getDistanceMatrix(
         {
-          origins: [origin1, origin2],
-          destinations: [destinationA, destinationB],
+          origins: [markers[0].position],
+          destinations: [markers[1].position],
           travelMode: googleMaps.TravelMode.DRIVING,
-          transitOptions: TransitOptions,
-          drivingOptions: DrivingOptions,
-          unitSystem: UnitSystem,
-          avoidHighways: Boolean,
-          avoidTolls: Boolean,
+          drivingOptions: {
+            departureTime: new Date(Date.now()),
+          },
         }, 
         res => {
-
+          console.log(res.rows[0].elements[0].distance.text);
+          //TASK: SETSTATUS  whether is came, traveling
         },
         err => {
-
+          console.log(err);
+          //TASK: SETSTATUS if is unrecognized
         }
       );
 

@@ -41,6 +41,7 @@ const makeMarker = (
 class Ways extends Component {
   constructor(props) {
     super(props)
+    //TASK: REAPEATED CODE
     const { tuid, uid, users } = props;
     const origin = filter(users, ({ key, value }) => ((key === uid) || !value.address))[0] || [];
     const destination = filter(users, ({ key, value }) => ((key === tuid) || !value.address))[0] || [];
@@ -58,6 +59,19 @@ class Ways extends Component {
     }]; */
     const { origin, destination } = this.state;
     this.props.getDirections(origin, destination);
+  }
+
+  componentDidUpdate({ users: prevUsers}){
+    //TASK: TESTE MODIFICATION
+    console.log('PREV USERS',prevUsers);
+    if(prevUsers !== this.props.users) {
+      //TASK: REAPEATED CODE
+      const { tuid, uid, users } = this.props;
+      const origin = filter(users, ({ key, value }) => ((key === uid) || !value.address))[0] || [];
+      const destination = filter(users, ({ key, value }) => ((key === tuid) || !value.address))[0] || [];
+
+      this.setState({ origin, destination });
+    }
   }
 
   render() {
