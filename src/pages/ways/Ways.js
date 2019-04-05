@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { firebaseConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { filter } from 'lodash';
 
@@ -8,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 
 import LiveMap from '../../components/live/LiveMap';
+import { config } from '../../config/maps';
 
 const styles = theme => ({
   root: {
@@ -20,6 +20,19 @@ const styles = theme => ({
     margin: 0,
   }
 });
+
+const makeMarker = ( 
+  {value: { address: { latitude, longitude }}, key },
+  own=true,
+  config
+) => {
+  const position = new window.google.maps.LatLng(latitude, longitude);
+  const icon = own 
+        ? config.assetsUrl+config.ownMarker
+        : config.assetsUrl+config.onlineMarker;
+
+  return new window.google.maps.Marker({ position, icon })
+}
 
 class Ways extends Component {
   render() {
@@ -36,7 +49,8 @@ class Ways extends Component {
       zoom: 13,
     };
 
-    //TASK: Build Origin/Destination Markers
+    const originMarker = makeMarker(origin, true, config);
+    const destinationMarker = makeMarker(destination, false, config);
 
     return (
       <div className={classes.root}>
@@ -46,6 +60,7 @@ class Ways extends Component {
               options={options}
               title="Road Map"
               roads
+              markers={[originMarker, destinationMarker]}
             />
           </Grid>
         </Grid>

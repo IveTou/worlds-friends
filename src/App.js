@@ -37,6 +37,7 @@ class App extends Component {
 const mapStateToProps = state => {
   return {
     auth: state.firebase.auth,
+    hasATarget: !!state.maps.targetUserId,
   }
 }
 

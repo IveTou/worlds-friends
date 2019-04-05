@@ -40,8 +40,8 @@ class World extends Component {
     const user = filter(users, ({ key, value }) => ((key === uid) || !value.address))[0] || [];
     const options = { 
       center: {
-        lat: user.value ? user.value.address.latitude : -12.98,
-        lng: user.value ? user.value.address.longitude : -38.47,
+        lat: user.value.address ? user.value.address.latitude : -12.98,
+        lng: user.value.address ? user.value.address.longitude : -38.47,
       },
       zoom: 13,
     };
@@ -72,7 +72,6 @@ class World extends Component {
               markers={markers}
               options={options} 
               title="Map"
-              users={users}              
             />
           </Grid>
           <Grid item xs={12} sm={3}>
