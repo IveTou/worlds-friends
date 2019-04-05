@@ -8,16 +8,27 @@ import ProtectedLayout from './components/layout/ProtectedLayout';
 import World from './pages/world/World';
 import Ways from './pages/ways/Ways';
 
+const ProtectedRoute 
+  = ({ isAllowed, ...props }) => 
+     isAllowed 
+     ? <Route {...props}/> 
+     : <Redirect to="/"/>;
+
 class App extends Component {
   render() {
-    const { auth } = this.props;
+    const { auth, hasATarget } = this.props;
     return (
       <BrowserRouter>
         <Switch>
           {auth.uid ?           
             <ProtectedLayout className="App">
               <Route exact path='/' component={World}/>
-              <Route exact path='/finding-ways' component={Ways}/>
+              <ProtectedRoute 
+                isAllowed={hasATarget} 
+                exact 
+                path="/finding-ways" 
+                component={Ways}
+              />
               <Route render={() => <Redirect to="/" />} />
             </ProtectedLayout>
             :
