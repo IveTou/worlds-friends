@@ -52,6 +52,9 @@ class Ways extends Component {
     const originMarker = makeMarker(origin, true, config);
     const destinationMarker = makeMarker(destination, false, config);
 
+    console.log(origin);
+    console.log(destination);
+
     return (
       <div className={classes.root}>
         <Grid container spacing={16} className={classes.grid}>

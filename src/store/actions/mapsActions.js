@@ -21,9 +21,11 @@ export const getDirections = (ori, des, way) => {
       { placeId: ori.placeId} : 
       { lat: ori.latitude, lng:  ori.longitude };
 
-    const destination = { lat: des.latitude, lng:  des.longitude };
-    //Maybe in the future I will take destination PlaceId too. We must to study the real advantage
-    const waypoints = way ? 
+    const destination = des.placeId ?
+      { placeId: des.placeId} : 
+      { lat: des.latitude, lng:  des.longitude };
+
+      const waypoints = way ? 
       map(way, ({ location, stopover }) => {
         const loc =  location.placeId ?
           { placeId: location.placeId} : 
