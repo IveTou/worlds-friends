@@ -7,10 +7,11 @@ const geolocationOpt = {
   maximumAge: 0
 };
 
-export const sendPosition = (hasRoadCorrection = false) => {
+export const sendPosition = () => {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();
     const { uid } = getState().firebase.auth;
+    const { directions } = getState().maps;
     const { 
       isEmpty, 
       firstName, 
@@ -29,18 +30,21 @@ export const sendPosition = (hasRoadCorrection = false) => {
           address: { latitude, longitude },
         }
 
-        hasRoadCorrection 
+        directions 
         ? googleMapsClient.nearestRoads({ points: point })
           .asPromise()
           .then(({ json: { snappedPoints } }) => {
+            console.log(`We are using Roads' position correction now.`)
             !isEmpty && snappedPoints && storeUserStatus(
               dispatch, 
               firebase, 
               uid, 
               {
                 ...status,
-                ...snappedPoints[0].location ,
-                placeId: snappedPoints[0].placeId,
+                address: {
+                  ...snappedPoints[0].location ,
+                  placeId: snappedPoints[0].placeId,
+                },
               }
             );
           })

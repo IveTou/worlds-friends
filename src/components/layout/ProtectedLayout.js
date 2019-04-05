@@ -21,7 +21,7 @@ class ProtectedLayout extends Component {
   }
 
   tick = () => {
-    this.props.sendPosition(!!this.props.directions);
+    this.props.sendPosition();
   }
 
   render() {
@@ -40,10 +40,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    directions: state.maps.directions,
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ProtectedLayout);
+export default connect(null, mapDispatchToProps)(ProtectedLayout);

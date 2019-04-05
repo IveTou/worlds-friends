@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { filter } from 'lodash';
+import { firebaseConnect } from 'react-redux-firebase';
 
 import { withStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 
 import LiveMap from '../../components/live/LiveMap';
 import { config } from '../../config/maps';
+import { getDirections } from '../../store/actions/mapsActions';
 
 const styles = theme => ({
   root: {
@@ -35,11 +37,30 @@ const makeMarker = (
 }
 
 class Ways extends Component {
-  render() {
-    const { classes, tuid, uid, users } = this.props;
-
+  constructor(props) {
+    super(props)
+    const { tuid, uid, users } = props;
     const origin = filter(users, ({ key, value }) => ((key === uid) || !value.address))[0] || [];
     const destination = filter(users, ({ key, value }) => ((key === tuid) || !value.address))[0] || [];
+  
+    this.state = {
+       origin: origin,
+       destination: destination,
+    }
+  }
+  
+  componentDidMount() {
+    /* const so = [{
+      location: { latitude: -12.34, longitude: -38.462 },
+      stopover: true
+    }]; */
+    const { origin, destination } = this.state;
+    this.props.getDirections(origin, destination);
+  }
+
+  render() {
+    const { classes, directions } = this.props;
+    const { origin, destination } = this.state;
 
     const options = { 
       center: {
@@ -52,9 +73,6 @@ class Ways extends Component {
     const originMarker = makeMarker(origin, true, config);
     const destinationMarker = makeMarker(destination, false, config);
 
-    console.log(origin);
-    console.log(destination);
-
     return (
       <div className={classes.root}>
         <Grid container spacing={16} className={classes.grid}>
@@ -64,6 +82,7 @@ class Ways extends Component {
               title="Road Map"
               roads
               markers={[originMarker, destinationMarker]}
+              directions={directions}
             />
           </Grid>
         </Grid>
@@ -77,10 +96,18 @@ const mapStateToProps = state => {
     tuid: state.maps.targetUserId,
     uid: state.firebase.auth.uid,
     users: state.firebase.ordered.users,
+    directions: state.maps.directions,
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    getDirections: (origin, destination, waypoints) => dispatch(getDirections(origin, destination, waypoints)),
   }
 }
 
 export default compose(
   withStyles(styles),
-  connect(mapStateToProps),
+  firebaseConnect(['users']),
+  connect(mapStateToProps, mapDispatchToProps),
 )(Ways);

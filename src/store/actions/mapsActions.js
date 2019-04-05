@@ -19,13 +19,13 @@ export const getDirections = (ori, des, way) => {
     
     const origin = ori.placeId ?
       { placeId: ori.placeId} : 
-      { lat: ori.latitude, lng:  ori.longitude };
+      { lat: ori.value.address.latitude, lng:  ori.value.address.longitude };
 
     const destination = des.placeId ?
-      { placeId: des.placeId} : 
-      { lat: des.latitude, lng:  des.longitude };
+      { placeId: des.value.address.placeId} : 
+      { lat: des.value.address.latitude, lng:  des.value.address.longitude };
 
-      const waypoints = way ? 
+    const waypoints = way ? 
       map(way, ({ location, stopover }) => {
         const loc =  location.placeId ?
           { placeId: location.placeId} : 

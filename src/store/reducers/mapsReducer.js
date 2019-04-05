@@ -21,6 +21,20 @@ const mapsReducer = (state = initState, action) => {
         maps: action.maps,
         mapsError: null,
       }
+    case 'GET_DIRECTIONS_SUCCESS':
+      console.log('Get directions succes');
+      return {
+        ...state,
+        directions: action.result,
+        mapsError: null,
+      }
+    case 'GET_DIRECTIONS_ERROR':
+      console.log('Get directions error');
+      return {
+        ...state,
+        directions: null,
+        mapsError: action.status,
+      }
     default:
       return state;
   }

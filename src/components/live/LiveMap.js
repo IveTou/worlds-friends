@@ -23,8 +23,17 @@ const styles = theme => ({
   }
 });
 
-export class LiveMap extends Component {
+const directionsDisplay = new window.google.maps.DirectionsRenderer({suppressMarkers: true});
 
+export class LiveMap extends Component {
+  constructor(props) {
+    super(props)
+  
+    this.state = {
+       maps: null,
+    }
+  }
+  
   initMap(comp, opt) {
     const maps = new window.google.maps.Map(comp, {...opt});
     this.props.setMaps(maps);
@@ -34,13 +43,23 @@ export class LiveMap extends Component {
     this.initMap(document.getElementById('maps'), this.props.options);
   }
 
-  componentDidUpdate({ markers: prevMarkers}) {
-    const { maps, markers, options } = this.props;
+  componentDidUpdate({ markers: prevMarkers, directions: prevDirections }) {
+    const { directions, maps, markers, options } = this.props;
 
-    maps.setCenter(options.center);
+    if(!this.state.maps) {
+      maps.setCenter(options.center);
+    }
 
     map(prevMarkers, marker => marker.setMap(null)); 
     map(markers, marker => marker.setMap(maps));
+
+    if(directions && (prevDirections !== directions)) {
+      if(!this.state.maps) {
+        directionsDisplay.setMap(maps);
+        this.setState({ maps });
+      }
+      directionsDisplay.setDirections(directions);
+    }
   }
 
   render() {
@@ -62,6 +81,7 @@ export class LiveMap extends Component {
 const mapStateToProps = state => {
   return {
     maps: state.maps.maps,
+    directions: state.maps.directions,
   }
 }
 
