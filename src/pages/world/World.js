@@ -26,6 +26,8 @@ const styles = theme => ({
   }
 });
 
+const googleMaps = window.google.maps;
+
 class World extends Component {
   render() {
     const { 
@@ -48,12 +50,12 @@ class World extends Component {
     
     const markers = map(users, user => {
       const { value: { address: { latitude, longitude }}, key } = user;
-      const position = new window.google.maps.LatLng(latitude, longitude);
+      const position = new googleMaps.LatLng(latitude, longitude);
       const icon = key === uid 
         ? config.assetsUrl+config.ownMarker
         : config.assetsUrl+config.onlineMarker;
 
-      return new window.google.maps.Marker({ position, icon })
+      return new googleMaps.Marker({ position, icon })
     });
 
     return (

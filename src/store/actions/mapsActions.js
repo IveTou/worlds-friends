@@ -1,5 +1,8 @@
 import { map } from 'lodash';
 
+const googleMaps = window.google.maps;
+const DirectionsService = new googleMaps.DirectionsService();
+
 export const setTargetUserId = tuid => {
   return dispatch => {
     dispatch({ type: 'SET_TARGET_SUCCESS', tuid});
@@ -14,9 +17,7 @@ export const setMaps = maps => {
 
 export const getDirections = (ori, des, way) => {
   return dispatch => {
-    const googleMaps = window.google.maps;
-    const DirectionsService = new googleMaps.DirectionsService();
-    
+
     const origin = ori.placeId ?
       { placeId: ori.placeId} : 
       { lat: ori.value.address.latitude, lng:  ori.value.address.longitude };
@@ -39,7 +40,7 @@ export const getDirections = (ori, des, way) => {
       {
         origin,
         destination,
-        travelMode: googleMaps.TravelMode.WALKING,
+        travelMode: googleMaps.TravelMode.DRIVING,
         drivingOptions: {
           departureTime: new Date(Date.now()),
         },

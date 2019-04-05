@@ -1,3 +1,4 @@
+//The '@google/maps' is a server-side API not designed to respond in real time to user input.
 import googleMaps from '@google/maps';
 import { omit } from 'lodash';
 

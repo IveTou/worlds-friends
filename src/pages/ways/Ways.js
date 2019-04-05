@@ -23,17 +23,19 @@ const styles = theme => ({
   }
 });
 
+const googleMaps = window.google.maps;
+
 const makeMarker = ( 
   {value: { address: { latitude, longitude }}, key },
   own=true,
   config
 ) => {
-  const position = new window.google.maps.LatLng(latitude, longitude);
+  const position = new googleMaps.LatLng(latitude, longitude);
   const icon = own 
         ? config.assetsUrl+config.ownMarker
         : config.assetsUrl+config.onlineMarker;
 
-  return new window.google.maps.Marker({ position, icon })
+  return new googleMaps.Marker({ position, icon })
 }
 
 class Ways extends Component {

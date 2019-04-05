@@ -23,7 +23,9 @@ const styles = theme => ({
   }
 });
 
-const directionsDisplay = new window.google.maps.DirectionsRenderer({suppressMarkers: true});
+const googleMaps = window.google.maps;
+const directionsDisplay = new googleMaps.DirectionsRenderer({suppressMarkers: true});
+const service = new googleMaps.DistanceMatrixService();
 
 export class LiveMap extends Component {
   constructor(props) {
@@ -35,7 +37,7 @@ export class LiveMap extends Component {
   }
   
   initMap(comp, opt) {
-    const maps = new window.google.maps.Map(comp, {...opt});
+    const maps = new googleMaps.Map(comp, {...opt});
     this.props.setMaps(maps);
   }
 
@@ -54,11 +56,36 @@ export class LiveMap extends Component {
     map(markers, marker => marker.setMap(maps));
 
     if(directions && (prevDirections !== directions)) {
+
       if(!this.state.maps) {
         directionsDisplay.setMap(maps);
         this.setState({ maps });
       }
-      directionsDisplay.setDirections(directions);
+
+      service.getDistanceMatrix(
+        {
+          origins: [origin1, origin2],
+          destinations: [destinationA, destinationB],
+          travelMode: googleMaps.TravelMode.DRIVING,
+          transitOptions: TransitOptions,
+          drivingOptions: DrivingOptions,
+          unitSystem: UnitSystem,
+          avoidHighways: Boolean,
+          avoidTolls: Boolean,
+        }, 
+        res => {
+
+        },
+        err => {
+
+        }
+      );
+
+      if(false) {//TASK: Rules to say if they are in the same place (CHEGOU)
+        
+      } else {
+        directionsDisplay.setDirections(directions);
+      }
     }
   }
 
