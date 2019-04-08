@@ -50,10 +50,8 @@ export const sendPosition = () => {
           })
           .catch(err => {
             !isEmpty && storeUserStatus(dispatch, firebase, uid, status);
-            dispatch({ 
-              type: 'GET_GEOLOCATION_ERROR', 
-              err: err + (!isEmpty && `Due to the error, the navigator's geolocation has placed.`), 
-            });
+            console.log(!isEmpty && `Due to the error, the navigator's geolocation has placed.`)
+            dispatch({ type: 'GET_GEOLOCATION_ERROR', err });
           })
         : !isEmpty && storeUserStatus(dispatch, firebase, uid, status);
       },

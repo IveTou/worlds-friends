@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { filter, isEmpty, map, round, transform } from 'lodash';
+import { filter, map, pick, round, transform } from 'lodash';
 import { firebaseConnect } from 'react-redux-firebase';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -9,7 +9,7 @@ import { Grid } from '@material-ui/core';
 
 import LiveMap from '../../components/live/LiveMap';
 import { config } from '../../config/maps';
-import { getDirections } from '../../store/actions/mapsActions';
+import { getDirections, getDistance } from '../../store/actions/mapsActions';
 
 export const styles = theme => ({
   root: {
@@ -28,8 +28,8 @@ const googleMaps = window.google.maps;
 export const makeMarker = ({ latitude, longitude }, own=true, config ) => {
   const position = new googleMaps.LatLng(latitude, longitude);
   const icon = own 
-        ? config.assetsUrl+config.ownMarker
-        : config.assetsUrl+config.onlineMarker;
+    ? config.assetsUrl+config.ownMarker
+    : config.assetsUrl+config.onlineMarker;
 
   return new googleMaps.Marker({ position, icon })
 }
@@ -86,12 +86,16 @@ class Ways extends Component {
       location: { latitude: -12.34, longitude: -38.462 },
       stopover: true
     }]; */
-    //console.log('makeposition',makePosition({...this.props}));
+
     this.setState(makePosition({...this.props}), () => {
       const { origin, destination } = this.state;
       this.props.getDirections(origin, destination);
     });
-    
+  }
+
+  componentDidMount() {
+    const { origin, destination } = this.state;
+    this.props.getDistance(pick(origin,['latitude', 'longitude']), pick(destination,['latitude', 'longitude']));
   }
 
   componentDidUpdate() {
@@ -101,9 +105,13 @@ class Ways extends Component {
     if(isPointChanged(this.state.origin, origin)) {
       this.setState(makePosition({...this.props}));
       this.setState({ pointsChanges: this.state.pointsChanges + 1 }, () => { 
-        console.log('your point has changed ', this.state.pointsChanges, ' times')
+        console.log('your point has changed ', this.state.pointsChanges, ' times');
+        const points = makePosition({...this.props})
+        this.props.getDistance(points.origin, points.destination);
       })
     }
+
+    //TASK: IF BOTH POINTS HAVE CHANGED GET DISTANCE AND MAYBE DIRECTIONS
   }
 
   render() {
@@ -117,6 +125,8 @@ class Ways extends Component {
       },
       zoom: 13,
     };
+
+    //console.log('state \n',origin, '\nprops \n', this.props.users[0].value.address)
 
     const originMarker = makeMarker(origin, true, config);
     const destinationMarker = makeMarker(destination, false, config);
@@ -151,6 +161,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     getDirections: (origin, destination, waypoints) => dispatch(getDirections(origin, destination, waypoints)),
+    getDistance: (origin, distance) => dispatch(getDistance(origin, distance)),
   }
 }
 

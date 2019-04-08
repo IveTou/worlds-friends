@@ -2,6 +2,7 @@ import { map } from 'lodash';
 
 const googleMaps = window.google.maps;
 const DirectionsService = new googleMaps.DirectionsService();
+const DistanceService = new googleMaps.DistanceMatrixService();
 
 export const setTargetUserId = tuid => {
   return dispatch => {
@@ -63,6 +64,27 @@ export const getDirections = (ori, des, way) => {
 export const eraseDirections = () => {
   return dispatch => {
     dispatch({ type: 'ERASE_DIRECTIONS_SUCCESS'});
+  }
+}
+
+export const getDistance = (origin, destination) => {
+  return dispatch => {
+    DistanceService.getDistanceMatrix(
+      {
+        origins: [[origin.latitude, origin.longitude].join()],
+        destinations: [[destination.latitude, destination.longitude].join()],
+        travelMode: googleMaps.TravelMode.DRIVING,
+        drivingOptions: {
+          departureTime: new Date(Date.now()),
+        },
+      }, 
+      res => {
+        dispatch({ type: 'GET_DISTANCE_SUCCESS', distance: res.rows[0].elements[0].distance });
+      },
+      err => {
+        dispatch({ type: 'GET_DISTANCE_SUCCESS', err });
+      }
+    );
   }
 }
 

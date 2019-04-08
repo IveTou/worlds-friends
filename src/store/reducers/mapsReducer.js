@@ -2,6 +2,7 @@ const initState = {
   maps: null,
   targetUserId: null,
   directions: null,
+  distance: null,
   mapsError: null,
 };
 
@@ -29,18 +30,30 @@ const mapsReducer = (state = initState, action) => {
         mapsError: null,
       }
     case 'GET_DIRECTIONS_ERROR':
-      console.log('Get directions error');
       return {
         ...state,
         directions: null,
         mapsError: action.status,
       }
-      case 'ERASE_DIRECTIONS_SUCCESS':
-        console.log('Erase directions success');
-        return {
-          ...state,
-          directions: null,
-        }
+    case 'ERASE_DIRECTIONS_SUCCESS':
+      console.log('Erase directions success');
+      return {
+        ...state,
+        directions: null,
+      }
+    case 'GET_DISTANCE_SUCCESS':
+      console.log('Get distance success');
+      return {
+        ...state,
+        distance: action.distance,
+      }
+    case 'GET_DISTANCE_ERROR':
+      console.log('Get distance error');
+      return {
+        ...state,
+        distance: null,
+        mapsError: action.err,
+      }
     default:
       return state;
   }

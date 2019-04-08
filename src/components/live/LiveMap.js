@@ -25,7 +25,6 @@ const styles = theme => ({
 
 const googleMaps = window.google.maps;
 const directionsDisplay = new googleMaps.DirectionsRenderer({suppressMarkers: true});
-const service = new googleMaps.DistanceMatrixService();
 
 export class LiveMap extends Component {
   constructor(props) {
@@ -46,7 +45,7 @@ export class LiveMap extends Component {
   }
 
   componentDidUpdate({ markers: prevMarkers, directions: prevDirections }) {
-    const { directions, maps, markers, options } = this.props;
+    const { directions, distance, maps, markers, options } = this.props;
 
     if(!this.state.maps) {
       maps.setCenter(options.center);
@@ -55,6 +54,8 @@ export class LiveMap extends Component {
     map(prevMarkers, marker => marker.setMap(null)); 
     map(markers, marker => marker.setMap(maps));
 
+    //console.log("LIVE MAP", directions);
+
     if(directions && (prevDirections !== directions)) {
 
       if(!this.state.maps) {
@@ -62,29 +63,11 @@ export class LiveMap extends Component {
         this.setState({ maps });
       }
 
-      service.getDistanceMatrix(
-        {
-          origins: [markers[0].position],
-          destinations: [markers[1].position],
-          travelMode: googleMaps.TravelMode.DRIVING,
-          drivingOptions: {
-            departureTime: new Date(Date.now()),
-          },
-        }, 
-        res => {
-          console.log(res.rows[0].elements[0].distance.text);
-          //TASK: SETSTATUS  whether is came, traveling
-        },
-        err => {
-          console.log(err);
-          //TASK: SETSTATUS if is unrecognized
-        }
-      );
-
-      if(false) {//TASK: Rules to say if they are in the same place (CHEGOU)
-        
-      } else {
+      if(distance && distance.value > 0 && (distance.value < 1000)) {
         directionsDisplay.setDirections(directions);
+      } else {
+        console.log('He is here. Directions will not be placed because you are in ', distance && distance.text)
+        maps.setZoom(18);
       }
     }
   }
@@ -109,6 +92,7 @@ const mapStateToProps = state => {
   return {
     maps: state.maps.maps,
     directions: state.maps.directions,
+    distance: state.maps.distance,
   }
 }
 

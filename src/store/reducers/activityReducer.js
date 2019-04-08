@@ -19,6 +19,7 @@ const activityReducer = (state = initState, action) => {
       }
     case 'GET_GEOLOCATION_ERROR':
       console.log('Get location error');
+      //console.log(action.err);
       return {
         ...state,
         updateError: 'Get location failed' + action.err,
