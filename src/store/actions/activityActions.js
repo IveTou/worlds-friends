@@ -34,7 +34,7 @@ export const sendPosition = () => {
         ? googleMapsClient.nearestRoads({ points: point })
           .asPromise()
           .then(({ json: { snappedPoints } }) => {
-            console.log(`We are using Roads' position correction now.`)
+            console.log(`We are using Roads' position correction now.`);
             !isEmpty && snappedPoints && storeUserStatus(
               dispatch, 
               firebase, 

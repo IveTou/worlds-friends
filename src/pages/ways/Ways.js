@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { filter } from 'lodash';
+import { filter, isEmpty, map, round, transform } from 'lodash';
 import { firebaseConnect } from 'react-redux-firebase';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -11,7 +11,7 @@ import LiveMap from '../../components/live/LiveMap';
 import { config } from '../../config/maps';
 import { getDirections } from '../../store/actions/mapsActions';
 
-const styles = theme => ({
+export const styles = theme => ({
   root: {
     flexGrow: 1,
     maxWidth: theme.spacing.unit * 128,
@@ -25,11 +25,7 @@ const styles = theme => ({
 
 const googleMaps = window.google.maps;
 
-const makeMarker = ( 
-  {value: { address: { latitude, longitude }}, key },
-  own=true,
-  config
-) => {
+export const makeMarker = ({ latitude, longitude }, own=true, config ) => {
   const position = new googleMaps.LatLng(latitude, longitude);
   const icon = own 
         ? config.assetsUrl+config.ownMarker
@@ -38,39 +34,75 @@ const makeMarker = (
   return new googleMaps.Marker({ position, icon })
 }
 
+export const makePosition = ({tuid, uid, users}) => {
+  const origin = filter(users, ({ key, value }) => ((key === uid) || !value.address))[0] || [];
+  const destination = filter(users, ({ key, value }) => ((key === tuid) || !value.address))[0] || [];
+  return { origin: origin.value.address, destination: destination.value.address }
+}
+
+export const arePointsChanged = (prev, current) => {
+  const response = [];
+
+  const prevUsersAddress = map(prev, prevUser => {
+    const { address } = prevUser.value;
+    return transform(address, (res, val, key) => {
+        res[key] = round(val, 3)
+    })
+  });
+
+  const usersAddress = map(current, prevUser => {
+    const { address } = prevUser.value;
+    return transform(address, (res, val, key) => {
+        res[key] = round(val, 3)
+    })
+  });
+
+  for(let i in prevUsersAddress) {
+    response.push(
+      prevUsersAddress[i].latitude !== usersAddress[i].latitude ||
+      prevUsersAddress[i].longitude !== usersAddress[i].longitude
+    )
+  }
+
+  return response.indexOf(true) > 0;
+}
+
+export const isPointChanged = (prev, current) => {
+  const response =
+    round(prev.latitude, 3) !==  round(current.latitude, 3) ||
+    round(prev.longitude, 3) !==  round(current.longitude, 3);
+  return response;
+}
+
+
 class Ways extends Component {
   constructor(props) {
     super(props)
-    //TASK: REAPEATED CODE
-    const { tuid, uid, users } = props;
-    const origin = filter(users, ({ key, value }) => ((key === uid) || !value.address))[0] || [];
-    const destination = filter(users, ({ key, value }) => ((key === tuid) || !value.address))[0] || [];
-  
-    this.state = {
-       origin: origin,
-       destination: destination,
-    }
+    this.state = { origin: null, destination: null, pointsChanges: 0 };
   }
   
-  componentDidMount() {
+  componentWillMount() {
     /* const so = [{
       location: { latitude: -12.34, longitude: -38.462 },
       stopover: true
     }]; */
-    const { origin, destination } = this.state;
-    this.props.getDirections(origin, destination);
+    //console.log('makeposition',makePosition({...this.props}));
+    this.setState(makePosition({...this.props}), () => {
+      const { origin, destination } = this.state;
+      this.props.getDirections(origin, destination);
+    });
+    
   }
 
-  componentDidUpdate({ users: prevUsers}){
-    //TASK: TESTE MODIFICATION
-    console.log('PREV USERS',prevUsers);
-    if(prevUsers !== this.props.users) {
-      //TASK: REAPEATED CODE
-      const { tuid, uid, users } = this.props;
-      const origin = filter(users, ({ key, value }) => ((key === uid) || !value.address))[0] || [];
-      const destination = filter(users, ({ key, value }) => ((key === tuid) || !value.address))[0] || [];
+  componentDidUpdate() {
+    const { users, uid } = this.props;
+    const { value: { address: origin } } = filter(users, ({ key, value }) => ((key === uid) || !value.address))[0] || [];
 
-      this.setState({ origin, destination });
+    if(isPointChanged(this.state.origin, origin)) {
+      this.setState(makePosition({...this.props}));
+      this.setState({ pointsChanges: this.state.pointsChanges + 1 }, () => { 
+        console.log('your point has changed ', this.state.pointsChanges, ' times')
+      })
     }
   }
 
@@ -80,8 +112,8 @@ class Ways extends Component {
 
     const options = { 
       center: {
-        lat: (origin.value ? origin.value.address.latitude : -12.98),
-        lng: (origin.value ? origin.value.address.longitude : -38.47),
+        lat: (origin ? origin.latitude : -12.98),
+        lng: (origin ? origin.longitude : -38.47),
       },
       zoom: 13,
     };

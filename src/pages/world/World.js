@@ -12,6 +12,8 @@ import Notifications from '../../components/dashboard/Notifications';
 import Profile from '../../components/dashboard/Profile';
 import LiveMap from '../../components/live/LiveMap';
 
+import { eraseDirections } from '../../store/actions/mapsActions';
+
 import { config } from '../../config/maps';
 
 const styles = theme => ({
@@ -29,6 +31,10 @@ const styles = theme => ({
 const googleMaps = window.google.maps;
 
 class World extends Component {
+  componentDidMount() {
+    this.props.eraseDirections();
+  }
+
   render() {
     const { 
       classes, 
@@ -94,9 +100,15 @@ const mapStateToProps = state => {
   }
 }
 
+const mapDispatchToProps = dispatch => {
+  return {
+    eraseDirections: () => dispatch(eraseDirections()),
+  }
+}
+
 export default compose(
   withStyles(styles),
-  connect(mapStateToProps),
+  connect(mapStateToProps, mapDispatchToProps),
   firebaseConnect(['users']),
   firestoreConnect([
     { collection: 'notifications', limit: 3, orderBy: ['time', 'desc'] },
