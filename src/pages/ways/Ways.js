@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { filter, map, pick, round, transform } from 'lodash';
+import { filter, map, round, transform } from 'lodash';
 import { firebaseConnect } from 'react-redux-firebase';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -40,17 +40,17 @@ export const makePosition = ({tuid, uid, users}) => {
   return { origin: origin.value.address, destination: destination.value.address }
 }
 
-export const arePointsChanged = (prev, current) => {
+export const arePointsChanged = (prevUsers, currentUsers) => {
   const response = [];
 
-  const prevUsersAddress = map(prev, prevUser => {
+  const prevUsersAddress = map(prevUsers, prevUser => {
     const { address } = prevUser.value;
     return transform(address, (res, val, key) => {
         res[key] = round(val, 3)
     })
   });
 
-  const usersAddress = map(current, prevUser => {
+  const usersAddress = map(currentUsers, prevUser => {
     const { address } = prevUser.value;
     return transform(address, (res, val, key) => {
         res[key] = round(val, 3)
@@ -59,8 +59,8 @@ export const arePointsChanged = (prev, current) => {
 
   for(let i in prevUsersAddress) {
     response.push(
-      prevUsersAddress[i].latitude !== usersAddress[i].latitude ||
-      prevUsersAddress[i].longitude !== usersAddress[i].longitude
+      round(prevUsersAddress[i].latitude, 3) !== round(usersAddress[i].latitude, 3) ||
+      round(prevUsersAddress[i].longitude, 3) !== round(usersAddress[i].longitude, 3)
     )
   }
 
@@ -89,29 +89,38 @@ class Ways extends Component {
 
     this.setState(makePosition({...this.props}), () => {
       const { origin, destination } = this.state;
-      this.props.getDirections(origin, destination);
+      this.props.getDistance(origin, destination);
     });
   }
 
   componentDidMount() {
     const { origin, destination } = this.state;
-    this.props.getDistance(pick(origin,['latitude', 'longitude']), pick(destination,['latitude', 'longitude']));
+    console.log('Wanna get directions with', origin, destination);
+    this.props.getDirections(origin, destination);
   }
 
-  componentDidUpdate() {
+  componentDidUpdate({users: prevUsers}) {
     const { users, uid } = this.props;
     const { value: { address: origin } } = filter(users, ({ key, value }) => ((key === uid) || !value.address))[0] || [];
 
     if(isPointChanged(this.state.origin, origin)) {
       this.setState(makePosition({...this.props}));
-      this.setState({ pointsChanges: this.state.pointsChanges + 1 }, () => { 
+      this.setState({ pointsChanges: this.state.pointsChanges + 1 }, () => {
+        //Just to update own status
         console.log('your point has changed ', this.state.pointsChanges, ' times');
-        const points = makePosition({...this.props})
-        this.props.getDistance(points.origin, points.destination);
-      })
+      });
     }
 
-    //TASK: IF BOTH POINTS HAVE CHANGED GET DISTANCE AND MAYBE DIRECTIONS
+    
+    if(arePointsChanged(prevUsers, users)) {
+      const points = makePosition({...this.props})
+      this.props.getDistance(points.origin, points.destination);
+      console.log('some or both of points have changed');
+
+      //TASK: IF BOTH POINTS HAVE CHANGED MAYBE GET DIRECTIONS
+      //const { origin, destination } = this.state;
+      //this.props.getDirections(origin, destination);
+    }
   }
 
   render() {
@@ -126,6 +135,7 @@ class Ways extends Component {
       zoom: 13,
     };
 
+    //TASK: CHECK MARKER-COORDINATEPROPS COMPLIMENT
     //console.log('state \n',origin, '\nprops \n', this.props.users[0].value.address)
 
     const originMarker = makeMarker(origin, true, config);

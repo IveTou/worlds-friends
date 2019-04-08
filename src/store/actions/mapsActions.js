@@ -71,8 +71,8 @@ export const getDistance = (origin, destination) => {
   return dispatch => {
     DistanceService.getDistanceMatrix(
       {
-        origins: [[origin.latitude, origin.longitude].join()],
-        destinations: [[destination.latitude, destination.longitude].join()],
+        origins: [origin.placeId || [origin.latitude, origin.longitude].join()],
+        destinations: [destination.placeId || [destination.latitude, destination.longitude].join()],
         travelMode: googleMaps.TravelMode.DRIVING,
         drivingOptions: {
           departureTime: new Date(Date.now()),
