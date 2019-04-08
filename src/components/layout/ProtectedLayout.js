@@ -12,7 +12,7 @@ class ProtectedLayout extends Component {
   }
 
   componentDidMount() {
-    const timer = setInterval(this.tick, 10000);
+    const timer = setInterval(this.tick, 40000);
     this.setState({timer});
   }
 
