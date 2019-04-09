@@ -89,15 +89,13 @@ class Ways extends Component {
 
     this.setState(makePosition({...this.props}), () => {
       const { origin, destination } = this.state;
-      this.props.getDistance(
-        origin,
-        destination,
-        () => this.props.getDirections(origin, destination)
-      );
+      this.props.getDistance(origin, destination);
     });
   }
 
   componentDidMount() {
+    const { origin, destination } = this.state;
+    this.props.getDirections(origin, destination)
   }
 
   componentDidUpdate({users: prevUsers}) {
