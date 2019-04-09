@@ -64,9 +64,9 @@ export class LiveMap extends Component {
       //Evertime directions was changed and distance is more than 50m we set the new direction//DON'T CHANGE
       if(distance && distance.value > 50) {
         directionsDisplay.setDirections(this.props.directions);
-        console.log('Too far yet', distance);
+        console.log('Too far yet! You are in', distance.text);
       } else {
-        console.log('Probable he is here!', distance);
+        console.log('Probable he is here!', distance && `You are in ${distance.text}`);
       }
     }
   }

@@ -16,9 +16,8 @@ export const setMaps = maps => {
   }
 }
 
-export const getDirections = (ori, des, way) => {
+export const getDirections = (ori = {}, des = {}, way = []) => {
   return dispatch => {
-
     const origin = ori.placeId ?
       { placeId: ori.placeId} : 
       { lat: ori.latitude, lng:  ori.longitude };
@@ -67,7 +66,7 @@ export const eraseDirections = () => {
   }
 }
 
-export const getDistance = (origin, destination) => {
+export const getDistance = (origin = {}, destination = {}, func = () => {}) => {
   return dispatch => {
     DistanceService.getDistanceMatrix(
       {
@@ -79,7 +78,11 @@ export const getDistance = (origin, destination) => {
         },
       }, 
       res => {
-        dispatch({ type: 'GET_DISTANCE_SUCCESS', distance: res.rows[0].elements[0].distance });
+        dispatch({ 
+          type: 'GET_DISTANCE_SUCCESS', 
+          distance: res.rows[0].elements[0].distance 
+        });
+        func();
       },
       err => {
         dispatch({ type: 'GET_DISTANCE_SUCCESS', err });

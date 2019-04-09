@@ -89,13 +89,15 @@ class Ways extends Component {
 
     this.setState(makePosition({...this.props}), () => {
       const { origin, destination } = this.state;
-      this.props.getDistance(origin, destination);
+      this.props.getDistance(
+        origin,
+        destination,
+        () => this.props.getDirections(origin, destination)
+      );
     });
   }
 
   componentDidMount() {
-    const { origin, destination } = this.state;
-    this.props.getDirections(origin, destination);
   }
 
   componentDidUpdate({users: prevUsers}) {
@@ -167,7 +169,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     getDirections: (origin, destination, waypoints) => dispatch(getDirections(origin, destination, waypoints)),
-    getDistance: (origin, distance) => dispatch(getDistance(origin, distance)),
+    getDistance: (origin, distance, func) => dispatch(getDistance(origin, distance, func)),
   }
 }
 
