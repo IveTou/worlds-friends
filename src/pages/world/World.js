@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
-import { reject, filter, map } from 'lodash';
+import { reject, filter, get, map } from 'lodash';
 
 import { withStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
@@ -44,18 +44,18 @@ class World extends Component {
       users,
     } = this.props;
 
-    const others = reject(users, ({ key, value }) => ((key === uid) || !value.address)) || [];
-    const user = filter(users, ({ key, value }) => ((key === uid) || !value.address))[0] || [];
+    const others = reject(users, ({ key, value }) => ((key === uid) || !value.address)) || null;
+    const user = filter(users, ({ key, value }) => ((key === uid) || !value.address))[0] || null;
     const options = { 
       center: {
-        lat: (user.value ? user.value.address.latitude : -12.98),
-        lng: (user.value ? user.value.address.longitude : -38.47),
+        lat: (user ? get(user, 'value.address.latitude') : -12.98),
+        lng: (user ? get(user, 'value.address.longitude') : -38.47),
       },
       zoom: 13,
     };
     
     const markers = map(users, user => {
-      const { value: { address: { latitude, longitude }}, key } = user;
+      const { value: { address: { latitude = null, longitude = null } = {}} = {}, key } = user;
       const position = new googleMaps.LatLng(latitude, longitude);
       const icon = key === uid 
         ? config.assetsUrl+config.ownMarker

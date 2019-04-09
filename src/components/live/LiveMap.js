@@ -61,17 +61,16 @@ export class LiveMap extends Component {
         this.setState({ maps });
       }
 
-      console.log('Directions has changed');
-      //Evertime directions was changed we set the new direction
+      //console.log('Directions has changed');
+      //Evertime directions was changed we set the new direction//DON'T CHANGE
       directionsDisplay.setDirections(this.props.directions);
     }
 
     //Just to report distance when directions is on
     if(directions && distance && (distance.value > 0)  && (distance.value > 500)) {
-      console.log('Distance is so far yet...', distance)
-    } else {
-      console.log('He is here. Directions will not be placed because you are in ', distance && distance)
-      maps.setZoom(18);
+      //console.log('Distance is so far yet...', distance)
+    } else if(directions) {
+      //console.log('He is here. Directions will not be placed because you are in ', distance)
     }
   }
 

@@ -59,8 +59,8 @@ export const arePointsChanged = (prevUsers, currentUsers) => {
 
   for(let i in prevUsersAddress) {
     response.push(
-      round(prevUsersAddress[i].latitude, 3) !== round(usersAddress[i].latitude, 3) ||
-      round(prevUsersAddress[i].longitude, 3) !== round(usersAddress[i].longitude, 3)
+      round(prevUsersAddress[i].latitude, 5) !== round(usersAddress[i].latitude, 5) ||
+      round(prevUsersAddress[i].longitude, 5) !== round(usersAddress[i].longitude, 5)
     )
   }
 
@@ -69,8 +69,8 @@ export const arePointsChanged = (prevUsers, currentUsers) => {
 
 export const isPointChanged = (prev, current) => {
   const response =
-    round(prev.latitude, 3) !==  round(current.latitude, 3) ||
-    round(prev.longitude, 3) !==  round(current.longitude, 3);
+    prev.latitude !==  current.latitude ||
+    prev.longitude !==  current.longitude;
   return response;
 }
 
@@ -95,7 +95,6 @@ class Ways extends Component {
 
   componentDidMount() {
     const { origin, destination } = this.state;
-    console.log('Wanna get directions with', origin, destination);
     this.props.getDirections(origin, destination);
   }
 
@@ -134,9 +133,6 @@ class Ways extends Component {
       },
       zoom: 13,
     };
-
-    //TASK: CHECK MARKER-COORDINATEPROPS COMPLIMENT
-    //console.log('state \n',origin, '\nprops \n', this.props.users[0].value.address)
 
     const originMarker = makeMarker(origin, true, config);
     const destinationMarker = makeMarker(destination, false, config);
