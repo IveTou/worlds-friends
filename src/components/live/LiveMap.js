@@ -61,16 +61,13 @@ export class LiveMap extends Component {
         this.setState({ maps });
       }
 
-      //console.log('Directions has changed');
-      //Evertime directions was changed we set the new direction//DON'T CHANGE
-      directionsDisplay.setDirections(this.props.directions);
-    }
-
-    //Just to report distance when directions is on
-    if(directions && distance && (distance.value > 0)  && (distance.value > 500)) {
-      //console.log('Distance is so far yet...', distance)
-    } else if(directions) {
-      //console.log('He is here. Directions will not be placed because you are in ', distance)
+      //Evertime directions was changed and distance is more than 50m we set the new direction//DON'T CHANGE
+      if(distance && distance.value > 50) {
+        directionsDisplay.setDirections(this.props.directions);
+        console.log('Too far yet', distance);
+      } else {
+        console.log('Probable he is here!', distance);
+      }
     }
   }
 
