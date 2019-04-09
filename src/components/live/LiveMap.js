@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { map } from 'lodash';
+import { get, map } from 'lodash';
 import classNames from 'classnames';
 
 import { Paper } from '@material-ui/core';
@@ -32,6 +32,7 @@ export class LiveMap extends Component {
   
     this.state = {
        maps: null,
+       stepsCount: Infinity,
     }
   }
   
@@ -44,7 +45,7 @@ export class LiveMap extends Component {
     this.initMap(document.getElementById('maps'), this.props.options);
   }
 
-  componentDidUpdate({ markers: prevMarkers, directions: prevDirections }) {
+  componentDidUpdate({ markers: prevMarkers }) {
     const { directions, distance, maps, markers, options } = this.props;
 
     if(!this.state.maps) {
@@ -54,11 +55,19 @@ export class LiveMap extends Component {
     map(prevMarkers, marker => marker.setMap(null)); 
     map(markers, marker => marker.setMap(maps));
 
-    if(directions && (prevDirections !== directions)) {
+    if(directions) {
+      const steps = get(directions, 'routes[0].legs[0].steps');
+      const stepsCount = this.state.stepsCount;
 
       if(!this.state.maps) {
         directionsDisplay.setMap(maps);
         this.setState({ maps });
+      }
+
+      if(steps.length < stepsCount) {
+        this.setState({ stepsCount: steps.length}, () => {
+          console.log("Steps have changed", this.state.stepsCount);
+        })
       }
 
       directionsDisplay.setDirections(this.props.directions);

@@ -99,7 +99,7 @@ class Ways extends Component {
   }
 
   componentDidUpdate({users: prevUsers}) {
-    const { users, uid } = this.props;
+    const { users, uid, directions } = this.props;
     const { value: { address: origin } } = filter(users, ({ key, value }) => ((key === uid) || !value.address))[0] || [];
 
     if(isPointChanged(this.state.origin, origin)) {
@@ -119,6 +119,7 @@ class Ways extends Component {
       //TASK: IF BOTH POINTS HAVE CHANGED MAYBE GET DIRECTIONS
       //const { origin, destination } = this.state;
       //this.props.getDirections(origin, destination);
+      directions.routes[0].legs[0].steps.shift();
     }
   }
 
