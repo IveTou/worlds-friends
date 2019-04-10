@@ -61,10 +61,10 @@ class Ways extends Component {
 
     if(isPointChanged(this.state.origin, origin,3)) {//Expressive changes
       console.log('You moved massively!!');
-      directions.routes[0].legs[0].steps.shift();
+      //TASK: Directions update logic
+      directions.routes[0].legs[0].steps.shift(); 
     }
-
-    
+ 
     if(arePointsChanged(prevUsers, users)) {
       const points = makePosition({...this.props})
       this.props.getDistance(points.origin, points.destination);

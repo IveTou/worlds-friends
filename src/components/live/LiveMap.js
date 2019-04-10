@@ -55,6 +55,7 @@ export class LiveMap extends Component {
     map(prevMarkers, marker => marker.setMap(null)); 
     map(markers, marker => marker.setMap(maps));
 
+    //Treats directions changes
     if(directions) {
       const steps = get(directions, 'routes[0].legs[0].steps');
       const stepsCount = this.state.stepsCount;
