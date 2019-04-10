@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { filter, map, round, transform } from 'lodash';
+import { filter } from 'lodash';
 import { firebaseConnect } from 'react-redux-firebase';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -10,6 +10,7 @@ import { Grid } from '@material-ui/core';
 import LiveMap from '../../components/live/LiveMap';
 import { config } from '../../config/maps';
 import { getDirections, getDistance } from '../../store/actions/mapsActions';
+import { makeMarker, makePosition, arePointsChanged, isPointChanged} from '../../utils/maps-transformations';
 
 export const styles = theme => ({
   root: {
@@ -22,58 +23,6 @@ export const styles = theme => ({
     margin: 0,
   }
 });
-
-const googleMaps = window.google.maps;
-
-export const makeMarker = ({ latitude, longitude }, own=true, config ) => {
-  const position = new googleMaps.LatLng(latitude, longitude);
-  const icon = own 
-    ? config.assetsUrl+config.ownMarker
-    : config.assetsUrl+config.onlineMarker;
-
-  return new googleMaps.Marker({ position, icon })
-}
-
-export const makePosition = ({tuid, uid, users}) => {
-  const origin = filter(users, ({ key, value }) => ((key === uid) || !value.address))[0] || [];
-  const destination = filter(users, ({ key, value }) => ((key === tuid) || !value.address))[0] || [];
-  return { origin: origin.value.address, destination: destination.value.address }
-}
-
-export const arePointsChanged = (prevUsers, currentUsers) => {
-  const response = [];
-
-  const prevUsersAddress = map(prevUsers, prevUser => {
-    const { address } = prevUser.value;
-    return transform(address, (res, val, key) => {
-        res[key] = round(val, 3)
-    })
-  });
-
-  const usersAddress = map(currentUsers, prevUser => {
-    const { address } = prevUser.value;
-    return transform(address, (res, val, key) => {
-        res[key] = round(val, 3)
-    })
-  });
-
-  for(let i in prevUsersAddress) {
-    response.push(
-      round(prevUsersAddress[i].latitude, 5) !== round(usersAddress[i].latitude, 5) ||
-      round(prevUsersAddress[i].longitude, 5) !== round(usersAddress[i].longitude, 5)
-    )
-  }
-
-  return response.indexOf(true) > 0;
-}
-
-export const isPointChanged = (prev, current) => {
-  const response =
-    prev.latitude !==  current.latitude ||
-    prev.longitude !==  current.longitude;
-  return response;
-}
-
 
 class Ways extends Component {
   constructor(props) {
@@ -102,7 +51,7 @@ class Ways extends Component {
     const { users, uid, directions } = this.props;
     const { value: { address: origin } } = filter(users, ({ key, value }) => ((key === uid) || !value.address))[0] || [];
 
-    if(isPointChanged(this.state.origin, origin)) {
+    if(isPointChanged(this.state.origin, origin)) {//Upadate every change
       this.setState(makePosition({...this.props}));
       this.setState({ pointsChanges: this.state.pointsChanges + 1 }, () => {
         //Just to update own status
@@ -110,16 +59,16 @@ class Ways extends Component {
       });
     }
 
+    if(isPointChanged(this.state.origin, origin,3)) {//Expressive changes
+      console.log('You moved massively!!');
+      directions.routes[0].legs[0].steps.shift();
+    }
+
     
     if(arePointsChanged(prevUsers, users)) {
       const points = makePosition({...this.props})
       this.props.getDistance(points.origin, points.destination);
       console.log('some or both of points have changed');
-
-      //TASK: IF BOTH POINTS HAVE CHANGED MAYBE GET DIRECTIONS
-      //const { origin, destination } = this.state;
-      //this.props.getDirections(origin, destination);
-      directions.routes[0].legs[0].steps.shift();
     }
   }
 

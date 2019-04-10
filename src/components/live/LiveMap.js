@@ -67,10 +67,11 @@ export class LiveMap extends Component {
       if(steps.length < stepsCount) {
         this.setState({ stepsCount: steps.length}, () => {
           console.log("Steps have changed", this.state.stepsCount);
-        })
-      }
+        });
 
-      directionsDisplay.setDirections(this.props.directions);
+        //That prevents restore zoom by set directions every interaction
+        directionsDisplay.setDirections(this.props.directions);
+      }
 
       //Evertime directions was changed and distance is more than 50m we set the new direction//DON'T CHANGE
       if(distance && distance.value > 50) {
