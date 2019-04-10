@@ -45,9 +45,16 @@ export const arePointsChanged = (prevUsers, currentUsers) => {
   return response.indexOf(true) > 0;
 }
 
-export const isPointChanged = (prev, current, n) => {
+export const isPointChanged = (prev, current, n = 16) => {
   const response =
     round(prev.latitude, n) !==  round(current.latitude, n) ||
     round(prev.longitude, n) !==  round(current.longitude, n);
   return response;
+}
+
+export const pointLegMatching = (point, legs) => {
+  //TASK: Directions update logic
+  //0 - Inf: In route
+  //-1: Out of route
+  return 1;
 }

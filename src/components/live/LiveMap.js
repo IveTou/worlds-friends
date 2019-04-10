@@ -66,7 +66,7 @@ export class LiveMap extends Component {
       }
 
       if(steps.length < stepsCount) {
-        this.setState({ stepsCount: steps.length}, () => {
+        this.setState({ stepsCount: steps.length }, () => {
           console.log("Steps have changed", this.state.stepsCount);
         });
 

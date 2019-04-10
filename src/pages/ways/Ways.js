@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { filter } from 'lodash';
+import { filter, get, drop } from 'lodash';
 import { firebaseConnect } from 'react-redux-firebase';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -10,7 +10,13 @@ import { Grid } from '@material-ui/core';
 import LiveMap from '../../components/live/LiveMap';
 import { config } from '../../config/maps';
 import { getDirections, getDistance } from '../../store/actions/mapsActions';
-import { makeMarker, makePosition, arePointsChanged, isPointChanged} from '../../utils/maps-transformations';
+import { 
+  makeMarker,
+  makePosition,
+  arePointsChanged,
+  isPointChanged,
+  pointLegMatching,
+} from '../../utils/maps-transformations';
 
 export const styles = theme => ({
   root: {
@@ -48,23 +54,37 @@ class Ways extends Component {
   }
 
   componentDidUpdate({users: prevUsers}) {
-    const { users, uid, directions } = this.props;
+    const { users, uid, directions, getDirections } = this.props;
     const { value: { address: origin } } = filter(users, ({ key, value }) => ((key === uid) || !value.address))[0] || [];
 
-    if(isPointChanged(this.state.origin, origin)) {//Upadate every change
+    //Expressive changes make us to update directions' legs
+    if(isPointChanged(this.state.origin, origin, 4)) {
+      console.log('You moved massively!!');
+
+      const steps = get(directions, 'routes[0].legs[0].steps');
+      const currentStepIndex = pointLegMatching(origin, steps);
+      
+      if(currentStepIndex > -1) {
+        console.log("But you're in the same path...");
+        const newSteps = drop(get(directions, 'routes[0].legs[0].steps'), currentStepIndex);
+        directions.routes[0].legs[0].steps = newSteps;
+      } else {
+        //PENDENT:TEMP
+        console.log("You're out path. We are calculating other route for you...");
+        getDirections(origin, this.state.destination);
+      }
+    }
+
+    //Upadate every change
+    if(isPointChanged(this.state.origin, origin)) {
       this.setState(makePosition({...this.props}));
       this.setState({ pointsChanges: this.state.pointsChanges + 1 }, () => {
         //Just to update own status
         console.log('your point has changed ', this.state.pointsChanges, ' times');
       });
     }
-
-    if(isPointChanged(this.state.origin, origin,3)) {//Expressive changes
-      console.log('You moved massively!!');
-      //TASK: Directions update logic
-      directions.routes[0].legs[0].steps.shift(); 
-    }
- 
+    
+    //Just to update distance
     if(arePointsChanged(prevUsers, users)) {
       const points = makePosition({...this.props})
       this.props.getDistance(points.origin, points.destination);
