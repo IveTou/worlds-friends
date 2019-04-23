@@ -55,10 +55,9 @@ class World extends Component {
     
     const markers = map(users, user => {
       const { value: { address: { latitude = null, longitude = null } = {}} = {}, key } = user;
-      return makeMarker({latitude, longitude}, key === uid, config, 2);
+      const marker = makeMarker({latitude, longitude}, key === uid, config, 2);
+      return { marker: marker, id: key };
     });
-
-    console.log(markers);
 
     return (
       <div className={classes.root}>

@@ -16,6 +16,12 @@ export const setMaps = maps => {
   }
 }
 
+export const setMarkers = stagedMarkers => {
+  return dispatch => {
+    dispatch({ type: 'SET_MARKERS_SUCCESS', stagedMarkers });
+  }
+}
+
 export const getDirections = (ori = {}, des = {}, way = []) => {
   return dispatch => {
     const origin = ori.placeId ?

@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { get, map } from 'lodash';
+import { get, map, intersectionBy, differenceBy, union } from 'lodash';
 import classNames from 'classnames';
 
 import { Paper } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
-import { setMaps } from '../../store/actions/mapsActions';
+import { setMaps, setMarkers } from '../../store/actions/mapsActions';
 
 const styles = theme => ({
   paper: {
@@ -31,8 +31,8 @@ export class LiveMap extends Component {
     super(props)
   
     this.state = {
-       maps: null,
-       stepsCount: Infinity,
+      maps: null,
+      stepsCount: Infinity,
     }
   }
   
@@ -46,15 +46,24 @@ export class LiveMap extends Component {
   }
 
   componentDidUpdate({ markers: prevMarkers }) {
-    const { directions, distance, maps, markers, options } = this.props;
+    const { directions, distance, maps, stagedMarkers, markers, options, setMarkers } = this.props;
 
     if(!this.state.maps) {
       maps.setCenter(options.center);
     }
+   
+    const markersToAdd = differenceBy(markers, stagedMarkers, 'id');
+    const markersDiff = differenceBy(prevMarkers, markers, 'id');
+    const markersIntersec = intersectionBy(stagedMarkers, markersDiff, 'id');
 
-    map(prevMarkers, marker => marker.setMap(null)); 
-    map(markers, marker => marker.setMap(maps));
-    //TASK: Don't create all but just the new ones. Which that are already existent We just have to update
+    map(markersToAdd, ({ marker }) => marker.setMap(maps));
+    map(markersIntersec, ({ marker }) => marker.setMap(null));
+
+    if(markersToAdd.length || markersIntersec.length) {
+      const mUnion = union(stagedMarkers, markersToAdd);
+      const uDiff =  differenceBy(mUnion, markersIntersec, 'id');
+      setMarkers(uDiff);
+    }
 
     //Treats directions changes
     if(directions) {
@@ -103,6 +112,7 @@ export class LiveMap extends Component {
 const mapStateToProps = state => {
   return {
     maps: state.maps.maps,
+    stagedMarkers: state.maps.stagedMarkers,
     directions: state.maps.directions,
     distance: state.maps.distance,
   }
@@ -111,6 +121,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     setMaps: maps => dispatch(setMaps(maps)),
+    setMarkers: markers => dispatch(setMarkers(markers)),
   }
 }
 

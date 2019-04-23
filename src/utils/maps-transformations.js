@@ -3,7 +3,7 @@ import { filter, map, round, transform } from 'lodash';
 
 const googleMaps = window.google.maps;
 
-export const makeMarker = ({ latitude, longitude }, own=true, config, animation ) => {
+export const makeMarker = ({ latitude, longitude }, own = true, config, animation = null ) => {
   const position = new googleMaps.LatLng(latitude, longitude);
   const icon = own 
     ? config.assetsUrl+config.ownMarker

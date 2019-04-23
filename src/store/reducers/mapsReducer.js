@@ -1,5 +1,6 @@
 const initState = {
   maps: null,
+  stagedMarkers: [],
   targetUserId: null,
   directions: null,
   distance: null,
@@ -20,6 +21,13 @@ const mapsReducer = (state = initState, action) => {
       return {
         ...state,
         maps: action.maps,
+        mapsError: null,
+      }
+    case 'SET_MARKERS_SUCCESS':
+      console.log('Set markers succes');
+      return {
+        ...state,
+        stagedMarkers: action.stagedMarkers,
         mapsError: null,
       }
     case 'GET_DIRECTIONS_SUCCESS':
