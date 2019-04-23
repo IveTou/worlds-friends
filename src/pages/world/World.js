@@ -13,6 +13,7 @@ import Profile from '../../components/dashboard/Profile';
 import LiveMap from '../../components/live/LiveMap';
 
 import { eraseDirections } from '../../store/actions/mapsActions';
+import { makeMarker } from '../../utils/maps-transformations';
 
 import { config } from '../../config/maps';
 
@@ -27,8 +28,6 @@ const styles = theme => ({
     margin: 0,
   }
 });
-
-const googleMaps = window.google.maps;
 
 class World extends Component {
   componentDidMount() {
@@ -56,13 +55,10 @@ class World extends Component {
     
     const markers = map(users, user => {
       const { value: { address: { latitude = null, longitude = null } = {}} = {}, key } = user;
-      const position = new googleMaps.LatLng(latitude, longitude);
-      const icon = key === uid 
-        ? config.assetsUrl+config.ownMarker
-        : config.assetsUrl+config.onlineMarker;
-
-      return new googleMaps.Marker({ position, icon })
+      return makeMarker({latitude, longitude}, key === uid, config, 2);
     });
+
+    console.log(markers);
 
     return (
       <div className={classes.root}>

@@ -3,13 +3,13 @@ import { filter, map, round, transform } from 'lodash';
 
 const googleMaps = window.google.maps;
 
-export const makeMarker = ({ latitude, longitude }, own=true, config ) => {
+export const makeMarker = ({ latitude, longitude }, own=true, config, animation ) => {
   const position = new googleMaps.LatLng(latitude, longitude);
   const icon = own 
     ? config.assetsUrl+config.ownMarker
     : config.assetsUrl+config.onlineMarker;
 
-  return new googleMaps.Marker({ position, icon })
+  return new googleMaps.Marker({ position, icon, animation: animation })
 }
 
 export const makePosition = ({tuid, uid, users}) => {

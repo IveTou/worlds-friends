@@ -54,6 +54,7 @@ export class LiveMap extends Component {
 
     map(prevMarkers, marker => marker.setMap(null)); 
     map(markers, marker => marker.setMap(maps));
+    //TASK: Don't create all but just the new ones. Which that are already existent We just have to update
 
     //Treats directions changes
     if(directions) {
