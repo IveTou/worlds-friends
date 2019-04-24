@@ -96,7 +96,7 @@ export class LiveMap extends Component {
     //Treats directions changes
     if(directions) {
       const steps = get(directions, 'routes[0].legs[0].steps');
-      const stepsCount = this.state.stepsCount;
+      const stepsCount = this.state.stepsCount;      
 
       if(!this.state.maps) {
         directionsDisplay.setMap(maps);
@@ -114,9 +114,9 @@ export class LiveMap extends Component {
 
       //Evertime directions was changed and distance is more than 50m we set the new direction//DON'T CHANGE
       if(distance && distance.value > 50) {
-        console.log('Too far yet! You are in', distance.text);
+        //console.log('Too far yet! You are in', distance.text);
       } else {
-        console.log('Probable he is here!', distance && `You are in ${distance.text}`);
+        //console.log('Probable he is here!', distance && `You are in ${distance.text}`);
       }
     }
   }
