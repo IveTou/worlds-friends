@@ -1,13 +1,21 @@
 import React, { Component } from 'react'
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { get, map, intersectionBy, differenceBy, union } from 'lodash';
+import { 
+  each, 
+  find, 
+  get,
+  map,
+  intersectionBy,
+  differenceBy,
+  union
+} from 'lodash';
 import classNames from 'classnames';
 
 import { Paper } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
-import { setMaps, setMarkers } from '../../store/actions/mapsActions';
+import { setMaps, eraseMarkers, setMarkers } from '../../store/actions/mapsActions';
 
 const styles = theme => ({
   paper: {
@@ -43,10 +51,19 @@ export class LiveMap extends Component {
 
   componentDidMount() {
     this.initMap(document.getElementById('maps'), this.props.options);
+    this.props.eraseMarkers();
   }
 
   componentDidUpdate({ markers: prevMarkers }) {
-    const { directions, distance, maps, stagedMarkers, markers, options, setMarkers } = this.props;
+    const { 
+      directions, 
+      distance, 
+      maps, 
+      stagedMarkers, 
+      markers, 
+      options, 
+      setMarkers, 
+    } = this.props;
 
     if(!this.state.maps) {
       maps.setCenter(options.center);
@@ -55,6 +72,17 @@ export class LiveMap extends Component {
     const markersToAdd = differenceBy(markers, stagedMarkers, 'id');
     const markersDiff = differenceBy(prevMarkers, markers, 'id');
     const markersIntersec = intersectionBy(stagedMarkers, markersDiff, 'id');
+    const markersToUpdate = intersectionBy(stagedMarkers, markers, 'id');
+
+    each(markersToUpdate, ({ marker, id }) => {
+      const { marker: input } = find(markers, ['id', id]);
+      const inputPosition = input.getPosition();
+      const currentPosition = marker.getPosition();
+
+      if(inputPosition !== currentPosition) {
+        marker.setPosition(inputPosition);
+      }
+    });
 
     map(markersToAdd, ({ marker }) => marker.setMap(maps));
     map(markersIntersec, ({ marker }) => marker.setMap(null));
@@ -122,6 +150,7 @@ const mapDispatchToProps = dispatch => {
   return {
     setMaps: maps => dispatch(setMaps(maps)),
     setMarkers: markers => dispatch(setMarkers(markers)),
+    eraseMarkers: () => dispatch(eraseMarkers()),
   }
 }
 

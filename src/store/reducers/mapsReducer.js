@@ -30,6 +30,12 @@ const mapsReducer = (state = initState, action) => {
         stagedMarkers: action.stagedMarkers,
         mapsError: null,
       }
+    case 'ERASE_MARKERS_SUCCESS':
+      console.log('Erase markers succes');
+      return {
+        ...state,
+        stagedMarkers: [],
+      }
     case 'GET_DIRECTIONS_SUCCESS':
       console.log('Get directions succes');
       return {

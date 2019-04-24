@@ -22,6 +22,12 @@ export const setMarkers = stagedMarkers => {
   }
 }
 
+export const eraseMarkers = () => {
+  return dispatch => {
+    dispatch({ type: 'ERASE_MARKERS_SUCCESS' });
+  }
+}
+
 export const getDirections = (ori = {}, des = {}, way = []) => {
   return dispatch => {
     const origin = ori.placeId ?

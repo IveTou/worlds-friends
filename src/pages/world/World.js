@@ -53,9 +53,13 @@ class World extends Component {
       zoom: 13,
     };
     
+    /*
+    TASK: Avoid to create without be sure that will be added to map; 
+    Sugestion: make Markers in the live map
+    */
     const markers = map(users, user => {
       const { value: { address: { latitude = null, longitude = null } = {}} = {}, key } = user;
-      const marker = makeMarker({latitude, longitude}, key === uid, config, 2);
+      const marker = makeMarker({ latitude, longitude }, key === uid, config, 2);
       return { marker: marker, id: key };
     });
 

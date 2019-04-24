@@ -93,7 +93,7 @@ class Ways extends Component {
   }
 
   render() {
-    const { classes, directions } = this.props;
+    const { classes, directions, uid, tuid } = this.props;
     const { origin, destination } = this.state;
 
     const options = { 
@@ -103,9 +103,12 @@ class Ways extends Component {
       },
       zoom: 13,
     };
-
-    const originMarker = makeMarker(origin, true, config);
-    const destinationMarker = makeMarker(destination, false, config);
+    
+     /*
+    TASK: Move creating Markers to live map
+    */
+    const originMarker = { marker: makeMarker(origin, true, config), id: uid };
+    const destinationMarker = { marker:  makeMarker(destination, false, config), id: tuid };
 
     return (
       <div className={classes.root}>
