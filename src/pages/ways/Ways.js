@@ -60,17 +60,17 @@ class Ways extends Component {
     //Expressive changes make us to update directions' legs
     if(isPointChanged(this.state.origin, origin, 4)) {
       console.log('You moved massively!!');
-
       const steps = get(directions, 'routes[0].legs[0].steps');
-      const currentStepIndex = pointLegMatching(origin, steps);
+      const { index, distance } = pointLegMatching(origin, steps);
+
+      console.log("Leg Matching", index, distance);
       
-      if(currentStepIndex > -1) {
+      if(distance < 50 && index > 0) {
         console.log("But you're in the same path...");
-        const newSteps = drop(get(directions, 'routes[0].legs[0].steps'), currentStepIndex);
+        const newSteps = drop(get(directions, 'routes[0].legs[0].steps'), index);
         directions.routes[0].legs[0].steps = newSteps;
       } else {
-        //PENDENT:TEMP
-        console.log("You're out path. We are calculating other route for you...");
+        console.log("You're out of path. We are calculating other route for you...");
         getDirections(origin, this.state.destination);
       }
     }

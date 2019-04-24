@@ -96,7 +96,7 @@ export class LiveMap extends Component {
     //Treats directions changes
     if(directions) {
       const steps = get(directions, 'routes[0].legs[0].steps');
-      const stepsCount = this.state.stepsCount;      
+      const stepsCount = this.state.stepsCount; 
 
       if(!this.state.maps) {
         directionsDisplay.setMap(maps);
