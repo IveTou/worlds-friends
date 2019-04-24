@@ -1,5 +1,5 @@
 
-import { each, filter, map, round, transform } from 'lodash';
+import { each, drop, filter, map, reduce, round, transform } from 'lodash';
 
 const googleMaps = window.google.maps;
 
@@ -52,17 +52,13 @@ export const isPointChanged = (prev, current, n = 16) => {
   return response;
 }
 
-export const toRadians = dg => {
-  var pi = Math.PI;
-  return dg * (pi/180);
-}
-
+export const toRadians = dg =>  dg * (Math.PI/180);
 
 export const haversineFunction = (origin, destination) => {
   const { latitude: origin_lat, longitude: origin_lng } = origin;
   const { latitude: destination_lat, longitude: destination_lng } = destination;
 
-	var R = 6371e3; // metres
+	var R = 6371e3; // meters
 	var origin_lat_rad = toRadians(origin_lat);
 	var destination_lat_rad = toRadians(destination_lat);
 	var distance_lat = toRadians(destination_lat - origin_lat);
@@ -92,12 +88,32 @@ export const pointLegMatching = (point, steps) => {
   const smallestIndex = indexOfSmallest(distances);
   const minimumDistance = distances[smallestIndex];
 
-  /*
-  TASK: Directions update logic
-  0 - Inf: In route
-    0: Same step
-    x: specific step ranging from 0 to N
-  -1: Out of route 
-  */
   return { index: smallestIndex, distance: minimumDistance };
+}
+
+export const updateLeg = (leg = [], index) => {
+  const { steps } = leg;
+  const newSteps = drop(steps, index);
+
+  const newCalc = reduce(
+    newSteps, 
+    (
+      { distance, duration }, 
+      { distance: { value: distValue }, duration: { value: durValue } }
+    ) => {
+      const distsum = distance.value + distValue;
+      const dursum = duration.value + durValue
+      return { 
+        distance: { value: distsum, text: round(distsum/1000) + ' km' }, 
+        duration: { value: dursum, text: round(dursum/60) + ' mins' },
+      };
+    },
+    { distance: { value: 0, text: '' }, duration: { value: 0, text: '' }}
+  );  
+  
+  return  { 
+    ...leg, 
+    ...newCalc, 
+    steps: newSteps,
+  };
 }

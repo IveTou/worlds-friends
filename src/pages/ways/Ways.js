@@ -16,6 +16,7 @@ import {
   arePointsChanged,
   isPointChanged,
   pointLegMatching,
+  updateLeg,
 } from '../../utils/maps-transformations';
 
 export const styles = theme => ({
@@ -62,13 +63,12 @@ class Ways extends Component {
       console.log('You moved massively!!');
       const steps = get(directions, 'routes[0].legs[0].steps');
       const { index, distance } = pointLegMatching(origin, steps);
-
-      console.log("Leg Matching", index, distance);
       
       if(distance < 50 && index > 0) {
         console.log("But you're in the same path...");
-        const newSteps = drop(get(directions, 'routes[0].legs[0].steps'), index);
-        directions.routes[0].legs[0].steps = newSteps;
+
+        const newLeg = updateLeg(get(directions, 'routes[0].legs[0]'), index);      
+        directions.routes[0].legs[0] = newLeg;
       } else {
         console.log("You're out of path. We are calculating other route for you...");
         getDirections(origin, this.state.destination);
