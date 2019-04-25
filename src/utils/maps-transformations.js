@@ -76,7 +76,7 @@ export const haversineFunction = (origin, destination) => {
 
 export const indexOfSmallest = arr => {
   let lowest = 0;
-  each(arr, (value, key) => lowest = value < lowest ? key : lowest);
+  each(arr, (value, key) => lowest = value < arr[lowest] ? key : lowest);
   return lowest;
  }
 
