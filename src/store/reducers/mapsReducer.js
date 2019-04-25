@@ -43,17 +43,18 @@ const mapsReducer = (state = initState, action) => {
         directions: action.result,
         mapsError: null,
       }
+    case 'ERASE_DIRECTIONS_SUCCESS':
+      console.log('Erase directions succes');
+      return {
+        ...state,
+        directions: null,
+        mapsError: null,
+      }
     case 'GET_DIRECTIONS_ERROR':
       return {
         ...state,
         directions: null,
         mapsError: action.status,
-      }
-    case 'ERASE_DIRECTIONS_SUCCESS':
-      console.log('Erase directions success');
-      return {
-        ...state,
-        directions: null,
       }
     case 'GET_DISTANCE_SUCCESS':
       console.log('Get distance success');

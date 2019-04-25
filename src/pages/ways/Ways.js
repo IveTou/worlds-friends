@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { filter, get, drop } from 'lodash';
+import { filter, get } from 'lodash';
 import { firebaseConnect } from 'react-redux-firebase';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -13,7 +13,6 @@ import { getDirections, getDistance } from '../../store/actions/mapsActions';
 import { 
   makeMarker,
   makePosition,
-  arePointsChanged,
   isPointChanged,
   pointLegMatching,
   updateLeg,
@@ -31,18 +30,19 @@ export const styles = theme => ({
   }
 });
 
+const initialState = {
+  origin: null, 
+  destination: null, 
+  offRoad: { distance: 0, index: 0, count: 0 },
+}
+
 class Ways extends Component {
   constructor(props) {
     super(props)
-    this.state = { origin: null, destination: null, pointsChanges: 0 };
+    this.state = initialState;
   }
   
   componentWillMount() {
-    /* const so = [{
-      location: { latitude: -12.34, longitude: -38.462 },
-      stopover: true
-    }]; */
-
     this.setState(makePosition({...this.props}), () => {
       const { origin, destination } = this.state;
       this.props.getDistance(origin, destination);
@@ -54,41 +54,38 @@ class Ways extends Component {
     this.props.getDirections(origin, destination)
   }
 
-  componentDidUpdate({users: prevUsers}) {
+  componentDidUpdate() {
     const { users, uid, directions, getDirections } = this.props;
     const { value: { address: origin } } = filter(users, ({ key, value }) => ((key === uid) || !value.address))[0] || [];
 
-    //Expressive changes make us to update directions' legs
-    if(isPointChanged(this.state.origin, origin, 4)) {
-      console.log('You moved massively!!');
+    //Upadate every change
+    if(isPointChanged(this.state.origin, origin) && directions) {
       const steps = get(directions, 'routes[0].legs[0].steps');
       const { index, distance } = pointLegMatching(origin, steps);
-      
-      if(distance < 50 && index > 0) {
-        console.log("But you're in the same path...");
+      const { offRoad: { count } } = this.state;
 
-        const newLeg = updateLeg(get(directions, 'routes[0].legs[0]'), index);      
-        directions.routes[0].legs[0] = newLeg;
-      } else {
-        console.log("You're out of path. We are calculating other route for you...");
-        getDirections(origin, this.state.destination);
-      }
-    }
+      this.setState({ 
+        ...makePosition({...this.props}),
+        offRoad: {
+          index,
+          distance,
+          count: distance > 50 ? (count + 1) : count,
+        }
+      }, () => {
+        const { offRoad: { index, count }, destination} = this.state;
+        const { offRoad: initialOffRoad } = initialState;
 
-    //Upadate every change
-    if(isPointChanged(this.state.origin, origin)) {
-      this.setState(makePosition({...this.props}));
-      this.setState({ pointsChanges: this.state.pointsChanges + 1 }, () => {
-        //Just to update own status
-        console.log('your point has changed ', this.state.pointsChanges, ' times');
+        //More or equal than 3 expressive changes make us to update directions' legs or to calculate a new route
+        if(count > 2) {
+          console.log("You moved out of path. We are calculating other route for you...");
+          getDirections(origin, destination);
+          this.setState({ offRoad: initialOffRoad });
+        } else {
+          console.log("You moved massively, but we think you're in the same path...");
+          const newLeg = updateLeg(get(directions, 'routes[0].legs[0]'), index);      
+          directions.routes[0].legs[0] = newLeg;
+        }
       });
-    }
-    
-    //Just to update distance
-    if(arePointsChanged(prevUsers, users)) {
-      const points = makePosition({...this.props})
-      this.props.getDistance(points.origin, points.destination);
-      console.log('some or both of points have changed');
     }
   }
 

@@ -103,12 +103,9 @@ export class LiveMap extends Component {
         this.setState({ maps });
       }
 
-      if(steps.length < stepsCount) {
-        this.setState({ stepsCount: steps.length }, () => {
-          console.log("Steps have changed", this.state.stepsCount);
-        });
-
-        //That prevents restore zoom by set directions every interaction
+      //That prevents restore zoom by set directions every interaction
+      if(steps.length !== stepsCount) {
+        this.setState({ stepsCount: steps.length });
         directionsDisplay.setDirections(this.props.directions);
       }
 

@@ -28,6 +28,12 @@ export const eraseMarkers = () => {
   }
 }
 
+export const eraseDirections = () => {
+  return dispatch => {
+    dispatch({ type: 'ERASE_DIRECTIONS_SUCCESS' });
+  }
+}
+
 export const getDirections = (ori = {}, des = {}, way = []) => {
   return dispatch => {
     const origin = ori.placeId ?
@@ -69,12 +75,6 @@ export const getDirections = (ori = {}, des = {}, way = []) => {
         }
       }
     );
-  }
-}
-
-export const eraseDirections = () => {
-  return dispatch => {
-    dispatch({ type: 'ERASE_DIRECTIONS_SUCCESS'});
   }
 }
 
