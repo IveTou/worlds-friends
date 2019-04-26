@@ -57,7 +57,6 @@ export class LiveMap extends Component {
   componentDidUpdate({ markers: prevMarkers }) {
     const { 
       directions, 
-      distance, 
       maps, 
       stagedMarkers, 
       markers, 
@@ -108,13 +107,6 @@ export class LiveMap extends Component {
         this.setState({ stepsCount: steps.length });
         directionsDisplay.setDirections(this.props.directions);
       }
-
-      //Evertime directions was changed and distance is more than 50m we set the new direction//DON'T CHANGE
-      if(distance && distance.value > 50) {
-        //console.log('Too far yet! You are in', distance.text);
-      } else {
-        //console.log('Probable he is here!', distance && `You are in ${distance.text}`);
-      }
     }
   }
 
@@ -139,7 +131,6 @@ const mapStateToProps = state => {
     maps: state.maps.maps,
     stagedMarkers: state.maps.stagedMarkers,
     directions: state.maps.directions,
-    distance: state.maps.distance,
   }
 }
 

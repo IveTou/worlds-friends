@@ -2,7 +2,6 @@ import { map } from 'lodash';
 
 const googleMaps = window.google.maps;
 const DirectionsService = new googleMaps.DirectionsService();
-const DistanceService = new googleMaps.DistanceMatrixService();
 
 export const setTargetUserId = tuid => {
   return dispatch => {
@@ -75,36 +74,5 @@ export const getDirections = (ori = {}, des = {}, way = []) => {
         }
       }
     );
-  }
-}
-
-export const getDistance = (origin = {}, destination = {}, func = () => {}) => {
-  return dispatch => {
-    DistanceService.getDistanceMatrix(
-      {
-        origins: [origin.placeId || [origin.latitude, origin.longitude].join()],
-        destinations: [destination.placeId || [destination.latitude, destination.longitude].join()],
-        travelMode: googleMaps.TravelMode.DRIVING,
-        drivingOptions: {
-          departureTime: new Date(Date.now()),
-        },
-      }, 
-      res => {
-        dispatch({ 
-          type: 'GET_DISTANCE_SUCCESS', 
-          distance: res.rows[0].elements[0].distance 
-        });
-        func();
-      },
-      err => {
-        dispatch({ type: 'GET_DISTANCE_SUCCESS', err });
-      }
-    );
-  }
-}
-
-export const updateDirections = () => {
-  return (dispatch, getState, { getFirebase }) => {
-    //const adressState = getState().activity.address;
   }
 }

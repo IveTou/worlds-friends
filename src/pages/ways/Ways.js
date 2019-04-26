@@ -9,7 +9,7 @@ import { Grid } from '@material-ui/core';
 
 import LiveMap from '../../components/live/LiveMap';
 import { config } from '../../config/maps';
-import { getDirections, getDistance } from '../../store/actions/mapsActions';
+import { getDirections } from '../../store/actions/mapsActions';
 import { 
   makeMarker,
   makePosition,
@@ -43,10 +43,7 @@ class Ways extends Component {
   }
   
   componentWillMount() {
-    this.setState(makePosition({...this.props}), () => {
-      const { origin, destination } = this.state;
-      this.props.getDistance(origin, destination);
-    });
+    this.setState(makePosition({...this.props}));
   }
 
   componentDidMount() {
@@ -137,7 +134,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     getDirections: (origin, destination, waypoints) => dispatch(getDirections(origin, destination, waypoints)),
-    getDistance: (origin, distance, func) => dispatch(getDistance(origin, distance, func)),
   }
 }
 

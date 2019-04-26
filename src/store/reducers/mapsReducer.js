@@ -3,7 +3,6 @@ const initState = {
   stagedMarkers: [],
   targetUserId: null,
   directions: null,
-  distance: null,
   mapsError: null,
 };
 
@@ -35,6 +34,7 @@ const mapsReducer = (state = initState, action) => {
       return {
         ...state,
         stagedMarkers: [],
+        mapsError: null,
       }
     case 'GET_DIRECTIONS_SUCCESS':
       console.log('Get directions succes');
@@ -55,19 +55,6 @@ const mapsReducer = (state = initState, action) => {
         ...state,
         directions: null,
         mapsError: action.status,
-      }
-    case 'GET_DISTANCE_SUCCESS':
-      console.log('Get distance success');
-      return {
-        ...state,
-        distance: action.distance,
-      }
-    case 'GET_DISTANCE_ERROR':
-      console.log('Get distance error');
-      return {
-        ...state,
-        distance: null,
-        mapsError: action.err,
       }
     default:
       return state;
