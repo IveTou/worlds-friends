@@ -82,11 +82,16 @@ class Ways extends Component {
           this.setState({ offRoad: initialOffRoad });
         } else {
           console.log("You moved massively, but we think you're in the same path...");
+          console.log(index, distance);
 
           const newLeg = updateLeg(get(directions, 'routes[0].legs[0]'), index);      
           directions.routes[0].legs[0] = newLeg;
         }
       });
+
+      if(distance < 10 || !steps || steps.length < 1) {
+        console.log("We think you're about here!");
+      }
     }
   }
 

@@ -97,7 +97,10 @@ export const pointLegMatching = (point, steps) => {
   const smallestIndex = indexOfSmallest(distances);
   const minimumDistance = distances[smallestIndex];
 
-  return { index: smallestIndex, distance: minimumDistance };
+  return { 
+    index: minimumDistance <= 200 ? smallestIndex : 0, 
+    distance: minimumDistance 
+  };
 }
 
 export const updateLeg = (leg = [], index) => {
