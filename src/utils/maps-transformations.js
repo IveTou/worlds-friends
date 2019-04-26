@@ -1,5 +1,5 @@
 
-import { each, drop, filter, map, reduce, round, transform } from 'lodash';
+import { each, drop, filter, map, mean, reduce, round, transform } from 'lodash';
 
 const googleMaps = window.google.maps;
 
@@ -81,9 +81,18 @@ export const indexOfSmallest = arr => {
  }
 
 export const pointLegMatching = (point, steps) => {
-  const distances =  map(steps, ({ start_location: { lat, lng } }) => {
-    return haversineFunction(point, {latitude: lat(), longitude: lng()})
-  });
+  const distances =  map(
+    steps, 
+    ({ 
+      start_location: { lat: start_lat, lng: start_lng }, 
+      end_location: { lat: end_lat, lng: end_lng } 
+    }) => {
+      const mean_lat = mean([start_lat(), end_lat()]);
+      const mean_lng = mean([start_lng(), end_lng()]);
+
+      return haversineFunction(point, { latitude: mean_lat, longitude: mean_lng })
+    }
+  );
 
   const smallestIndex = indexOfSmallest(distances);
   const minimumDistance = distances[smallestIndex];
@@ -93,7 +102,8 @@ export const pointLegMatching = (point, steps) => {
 
 export const updateLeg = (leg = [], index) => {
   const { steps } = leg;
-  const newSteps = drop(steps, index);
+  const cutAt = index > 0 ? index + 1 : index;
+  const newSteps = drop(steps, cutAt);
 
   const newCalc = reduce(
     newSteps, 

@@ -61,12 +61,14 @@ class Ways extends Component {
       const { index, distance } = pointLegMatching(origin, steps);
       const { offRoad: { count } } = this.state;
 
+      const computedCount = steps.length && distance > 50 ? (distance < 500 ? (count + 1) : 3) : count;
+
       this.setState({ 
         ...makePosition({...this.props}),
         offRoad: {
           index,
           distance,
-          count: distance > 50 ? (count + 1) : count,
+          count: computedCount,
         }
       }, () => {
         const { offRoad: { index, count }, destination} = this.state;
@@ -75,10 +77,12 @@ class Ways extends Component {
         //More or equal than 3 expressive changes make us to update directions' legs or to calculate a new route
         if(count > 2) {
           console.log("You moved out of path. We are calculating other route for you...");
+
           getDirections(origin, destination);
           this.setState({ offRoad: initialOffRoad });
         } else {
           console.log("You moved massively, but we think you're in the same path...");
+
           const newLeg = updateLeg(get(directions, 'routes[0].legs[0]'), index);      
           directions.routes[0].legs[0] = newLeg;
         }
