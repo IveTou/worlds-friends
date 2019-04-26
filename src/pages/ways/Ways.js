@@ -18,6 +18,9 @@ import {
   updateLeg,
 } from '../../utils/maps-transformations';
 
+const BOTTOM_ROUND_BOUND = 50;
+const UPPER_ROUND_BOUND = 500;
+
 export const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -61,7 +64,7 @@ class Ways extends Component {
       const { index, distance } = pointLegMatching(origin, steps);
       const { offRoad: { count } } = this.state;
 
-      const computedCount = steps.length && distance > 50 ? (distance < 500 ? (count + 1) : 3) : count;
+      const computedCount = steps.length && distance > BOTTOM_ROUND_BOUND ? (distance < UPPER_ROUND_BOUND ? (count + 1) : 3) : count;
 
       this.setState({ 
         ...makePosition({...this.props}),
@@ -82,7 +85,6 @@ class Ways extends Component {
           this.setState({ offRoad: initialOffRoad });
         } else {
           console.log("You moved massively, but we think you're in the same path...");
-          console.log(index, distance);
 
           const newLeg = updateLeg(get(directions, 'routes[0].legs[0]'), index);      
           directions.routes[0].legs[0] = newLeg;

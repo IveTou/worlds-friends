@@ -2,6 +2,7 @@
 import { each, drop, filter, map, mean, reduce, round, transform } from 'lodash';
 
 const googleMaps = window.google.maps;
+const MAX_CUT_DISTANCE = 200;
 
 export const makeMarker = ({ latitude, longitude }, own = true, config, animation = null ) => {
   const position = new googleMaps.LatLng(latitude, longitude);
@@ -98,7 +99,7 @@ export const pointLegMatching = (point, steps) => {
   const minimumDistance = distances[smallestIndex];
 
   return { 
-    index: minimumDistance <= 200 ? smallestIndex : 0, 
+    index: minimumDistance <= MAX_CUT_DISTANCE ? smallestIndex : 0, 
     distance: minimumDistance 
   };
 }
