@@ -45,10 +45,11 @@ class World extends Component {
 
     const others = reject(users, ({ key, value }) => ((key === uid) || !value.address)) || null;
     const user = filter(users, ({ key, value }) => ((key === uid) || !value.address))[0] || null;
+
     const options = { 
       center: {
-        lat: (user ? get(user, 'value.address.latitude') : -12.98),
-        lng: (user ? get(user, 'value.address.longitude') : -38.47),
+        lat: (get(user, 'value.address.latitude') || -12.98),
+        lng: (get(user, 'value.address.longitude') || -38.47),
       },
       zoom: 13,
     };

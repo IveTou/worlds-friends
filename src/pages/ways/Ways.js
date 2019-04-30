@@ -104,8 +104,8 @@ class Ways extends Component {
 
     const options = { 
       center: {
-        lat: (origin ? origin.latitude : -12.98),
-        lng: (origin ? origin.longitude : -38.47),
+        lat: (get(origin, 'latitude') || -12.98),
+        lng: (get(origin, 'longitude') || -38.47),
       },
       zoom: 13,
     };

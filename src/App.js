@@ -17,11 +17,12 @@ const ProtectedRoute
 class App extends Component {
   render() {
     const { auth, hasATarget } = this.props;
+
     return (
       <BrowserRouter>
-        <Switch>
-          {auth.uid ?           
-            <ProtectedLayout className="App">
+        {auth.uid ?           
+          <ProtectedLayout className="App">
+            <Switch>
               <Route exact path='/' component={World}/>
               <ProtectedRoute 
                 isAllowed={hasATarget} 
@@ -29,17 +30,18 @@ class App extends Component {
                 path="/finding-ways" 
                 component={Ways}
               />
-              <Route render={() => <Redirect to="/" />} />
-            </ProtectedLayout>
-            :
-            <DefaultLayout className="App">
-              <Route exact path="/" render={() => <Redirect to="/signin" />} />
-              <Route path='/signin' component={SignIn}/>
-              <Route path='/signup' component={SignUp}/>
-              <Route render={() => <Redirect to="/signin" />} />
-            </DefaultLayout>
-          }
-        </Switch>
+              <Route component={World} />
+            </Switch>
+          </ProtectedLayout>
+          :
+          <DefaultLayout className="App">
+            <Switch>
+              <Route exact path='/signin' component={SignIn}/>
+              <Route exact path='/signup' component={SignUp}/>
+              <Route component={SignIn} />
+            </Switch>
+          </DefaultLayout>
+        }
       </BrowserRouter>
     );
   }

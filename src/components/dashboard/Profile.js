@@ -24,7 +24,15 @@ const styles = theme => ({
   },
 });
 
-const renderList = (classes, users = []) => {
+const renderList = (
+  classes, 
+  users = [], 
+  anchorEl, 
+  handleClick,
+  handleClose,
+  handleClickDetails,
+  handleClickFind,
+) => {
   return users.length ?
     <ul>
       {users && users.map(user => {
@@ -32,9 +40,9 @@ const renderList = (classes, users = []) => {
         return(
           <li key={key}>
             <div 
-              aria-owns={this.state.anchorEl ? 'simple-menu' : undefined}
+              aria-owns={anchorEl ? 'simple-menu' : undefined}
               aria-haspopup="true"
-              onClick={this.handleClick}
+              onClick={handleClick}
               style={{cursor: 'pointer'}}
             >
               <span className={classes.name}>
@@ -43,21 +51,21 @@ const renderList = (classes, users = []) => {
               <span> ( {initials} )</span>
             </div>
             <Menu
-              anchorEl={this.state.anchorEl}
-              open={Boolean(this.state.anchorEl)}
-              onClose={this.handleClose}
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
               TransitionComponent={Zoom}
             >
               <MenuItem 
                 id={key}
-                onClick={this.handleClickDetails}
+                onClick={handleClickDetails}
                 className={classes.menuItem}
               >
                 Details
               </MenuItem>
               <MenuItem 
                 id={key}
-                onClick={this.handleClickFind}
+                onClick={handleClickFind}
                 className={classes.menuItem}
               >
                 Go find!
@@ -109,7 +117,15 @@ class Profile extends Component {
         </ul>
         <h6>People</h6>
         <hr/>
-        { renderList(classes, users) }
+        { renderList(
+          classes, 
+          users, 
+          this.state.anchorEl, 
+          this.handleClick,
+          this.handleClose,
+          this.handleClickDetails,
+          this.handleClickFind,
+        ) }
       </Paper>
     );
   }

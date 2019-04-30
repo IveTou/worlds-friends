@@ -20,6 +20,7 @@ class SignIn extends Component {
   }
   render() {
     const { authError } = this.props;
+
     return (
       <div className="container">
         <form onSubmit={this.handleSubmit} className="white">
