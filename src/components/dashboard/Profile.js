@@ -24,6 +24,52 @@ const styles = theme => ({
   },
 });
 
+const renderList = (classes, users = []) => {
+  return users.length ?
+    <ul>
+      {users && users.map(user => {
+        let { key, value: { initials, firstName, lastName }} = user;
+        return(
+          <li key={key}>
+            <div 
+              aria-owns={this.state.anchorEl ? 'simple-menu' : undefined}
+              aria-haspopup="true"
+              onClick={this.handleClick}
+              style={{cursor: 'pointer'}}
+            >
+              <span className={classes.name}>
+                > {firstName} {lastName} 
+              </span>
+              <span> ( {initials} )</span>
+            </div>
+            <Menu
+              anchorEl={this.state.anchorEl}
+              open={Boolean(this.state.anchorEl)}
+              onClose={this.handleClose}
+              TransitionComponent={Zoom}
+            >
+              <MenuItem 
+                id={key}
+                onClick={this.handleClickDetails}
+                className={classes.menuItem}
+              >
+                Details
+              </MenuItem>
+              <MenuItem 
+                id={key}
+                onClick={this.handleClickFind}
+                className={classes.menuItem}
+              >
+                Go find!
+              </MenuItem>
+            </Menu>
+          </li>
+        )
+      })}
+    </ul> :
+    'Looking for someone else...';
+}
+
 class Profile extends Component {
   constructor(props) {
     super(props)
@@ -63,47 +109,7 @@ class Profile extends Component {
         </ul>
         <h6>People</h6>
         <hr/>
-        <ul>
-          {users && users.map(user => {
-            let { key, value: { initials, firstName, lastName }} = user;
-            return(
-              <li key={key}>
-                <div 
-                  aria-owns={this.state.anchorEl ? 'simple-menu' : undefined}
-                  aria-haspopup="true"
-                  onClick={this.handleClick}
-                  style={{cursor: 'pointer'}}
-                >
-                  <span className={classes.name}>
-                    > {firstName} {lastName} 
-                  </span>
-                  <span> ( {initials} )</span>
-                </div>
-                <Menu
-                  anchorEl={this.state.anchorEl}
-                  open={Boolean(this.state.anchorEl)}
-                  onClose={this.handleClose}
-                  TransitionComponent={Zoom}
-                >
-                  <MenuItem 
-                    id={key}
-                    onClick={this.handleClickDetails}
-                    className={classes.menuItem}
-                  >
-                    Details
-                  </MenuItem>
-                  <MenuItem 
-                    id={key}
-                    onClick={this.handleClickFind}
-                    className={classes.menuItem}
-                  >
-                    Go find!
-                  </MenuItem>
-                </Menu>
-              </li>
-            )
-          })}
-        </ul>
+        { renderList(classes, users) }
       </Paper>
     );
   }
