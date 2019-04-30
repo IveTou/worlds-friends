@@ -88,6 +88,7 @@ class Ways extends Component {
 
           const newLeg = updateLeg(get(directions, 'routes[0].legs[0]'), index);      
           directions.routes[0].legs[0] = newLeg;
+          //TASK: A state has to be immutable!
         }
       });
 
