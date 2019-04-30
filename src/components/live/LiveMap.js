@@ -54,6 +54,7 @@ export class LiveMap extends Component {
     this.props.eraseMarkers();
   }
 
+  //TASK: Move the logic out of our React components
   componentDidUpdate({ markers: prevMarkers }) {
     const { 
       directions, 

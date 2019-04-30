@@ -54,6 +54,7 @@ class Ways extends Component {
     this.props.getDirections(origin, destination)
   }
 
+  //TASK: Move the logic out of our React components
   componentDidUpdate() {
     const { users, uid, directions, getDirections } = this.props;
     const { value: { address: origin } } = filter(users, ({ key, value }) => ((key === uid) || !value.address))[0] || [];
